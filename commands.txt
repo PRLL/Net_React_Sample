@@ -1,0 +1,32 @@
+// @ create
+dotnet new sln
+dotnet new webapi -n API
+dotnet new classlib -n Application
+dotnet new classlib -n Domain
+dotnet new classlib -n Persistence
+
+dotnet sln add .\API\API.csproj
+dotnet sln add .\Application\
+dotnet sln add .\Persistence\
+dotnet sln add .\Domain\
+
+cd API
+dotnet add reference ..\Application\
+cd ..\Application\
+dotnet add reference ..\Persistence\
+cd ..\Persistence\
+dotnet add reference ..\Domain\
+
+// @ run
+cd API
+dotnet watch run
+
+// @ migration
+dotnet tool list --global
+dotnet tool install --global dotnet-ef --version 5.0.3
+dotnet tool update --global dotnet-ef --version 5.0.3
+dotnet ef migrations add InitialCreate -p .\Persistence\ -s .\API\
+
+
+// @ git
+dotnet new gitignore
