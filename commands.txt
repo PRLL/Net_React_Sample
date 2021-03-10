@@ -1,4 +1,4 @@
-// @ create
+// @ create .net
 dotnet new sln
 dotnet new webapi -n API
 dotnet new classlib -n Application
@@ -17,16 +17,32 @@ dotnet add reference ..\Persistence\
 cd ..\Persistence\
 dotnet add reference ..\Domain\
 
-// @ run
+
+// @ run .net
 cd API
 dotnet watch run
 
-// @ migration
+
+// @ migration .net
 dotnet tool list --global
 dotnet tool install --global dotnet-ef --version 5.0.3
 dotnet tool update --global dotnet-ef --version 5.0.3
 dotnet ef migrations add InitialCreate -p .\Persistence\ -s .\API\
 
 
-// @ git
+// @ git .net
 dotnet new gitignore
+
+
+
+
+
+
+// @ create react
+npx create-react-app client-app --use-npm --template typescript
+
+// @install node_modules
+npm install
+
+// @run react
+npm starts
