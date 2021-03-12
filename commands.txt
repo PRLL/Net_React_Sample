@@ -22,6 +22,11 @@ dotnet add reference ..\Domain\
 cd API
 dotnet watch run
 
+// @nuget installs
+(surely missing enity framework install and others. maybe there's a way to check install nugets and on which projects??)
+Microsoft.EntityFrameworkCore.Design [ API ]
+MediatR.Extensions.Microsoft.DependencyInjection [ Application ]
+AutoMapper.Extensions.Microsoft.DependencyInjection [ Application ]
 
 // @ migration .net
 dotnet tool list --global
