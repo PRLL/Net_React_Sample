@@ -1,8 +1,8 @@
 import React from 'react';
-import { IDuck } from './typescript_stuff';
+import { Duck } from './test-typescript_stuff';
 
 interface Props {
-    duck: IDuck;
+    duck: Duck;
 }
 
 export default function DuckItem({duck}: Props) {

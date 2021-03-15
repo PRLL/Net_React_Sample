@@ -49,5 +49,10 @@ npx create-react-app client-app --use-npm --template typescript
 // @install node_modules
 npm install
 
+// @install uuid
+npm install uuid
+    [in case has no definitions for typescript, try...]
+    npm i --save-dev @types/uuid
+
 // @run react
 npm starts

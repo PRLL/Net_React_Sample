@@ -8,19 +8,19 @@ var1 = '2';
 
 
 
-export interface IDuck {
+export interface Duck {
     name: string;
     numLegs: number;
     makeSound?: (sound: string) => void; // with '?' is optional
 }
 
-const duck1: IDuck = {
+const duck1: Duck = {
     name: "pedro",
     numLegs: 2,
     makeSound: (sound: any) => console.log(sound)
 }
 
-const duck2: IDuck = {
+const duck2: Duck = {
     name: "pablo",
     numLegs: 2,
     makeSound: (sound: any) => console.log(sound)
