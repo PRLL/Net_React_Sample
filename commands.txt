@@ -53,6 +53,7 @@ npm install
 npm install uuid
     [in case has no definitions for typescript, try...]
     npm i --save-dev @types/uuid
+npm install mobx mobx-react-lite
 
 // @run react
 npm starts
