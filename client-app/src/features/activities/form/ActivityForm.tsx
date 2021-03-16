@@ -4,12 +4,13 @@ import { Activity } from '../../../models/activity';
 
 interface Props {
     activity: Activity | undefined;
+    submitting: boolean;
     closeForm: () => void;
     createOrEdit: (activity: Activity) => void;
 }
   
-export default function ActivityForm({ activity: selectedActivity /*using ':' changes the name of variable*/, closeForm, createOrEdit }: Props) {
-
+export default function ActivityForm({ activity: selectedActivity /*using ':' changes the name of variable*/, submitting,
+    closeForm, createOrEdit }: Props) {
     const initialState = selectedActivity ?? {
         id: '',
         title: '',
@@ -37,10 +38,10 @@ export default function ActivityForm({ activity: selectedActivity /*using ':' ch
                 <Form.Input placeholder='Title' value={ formActivity.title } name='title' onChange={ handleInputChange } />
                 <Form.TextArea placeholder='Description' value={ formActivity.description } name='description' onChange={ handleInputChange } />
                 <Form.Input placeholder='Category' value={ formActivity.category } name='category' onChange={ handleInputChange } />
-                <Form.Input placeholder='Date' value={ formActivity.date } name='date' onChange={ handleInputChange } />
+                <Form.Input type='date' placeholder='Date' value={ formActivity.date.split('T')[0] } name='date' onChange={ handleInputChange } />
                 <Form.Input placeholder='City' value={ formActivity.city } name='city' onChange={ handleInputChange } />
                 <Form.Input placeholder='Venue' value={ formActivity.venue } name='venue' onChange={ handleInputChange } />
-                <Button floated='right' positive type='submit' content='Submit' />
+                <Button loading={submitting} floated='right' positive type='submit' content='Submit' />
                 <Button onClick={ closeForm } floated='right' type='button' content='Cancel' />
             </Form>
         </Segment>
