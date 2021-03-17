@@ -49,11 +49,13 @@ npx create-react-app client-app --use-npm --template typescript
 // @install node_modules
 npm install
 
-// @install uuid
+// @install stuff
 npm install uuid
     [in case has no definitions for typescript, try...]
     npm i --save-dev @types/uuid
 npm install mobx mobx-react-lite
+npm install react-router-dom
+    npm install @types/react-router-dom --save-dev
 
 // @run react
-npm starts
+npm start

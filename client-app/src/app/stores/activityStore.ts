@@ -1,49 +1,74 @@
-import { /*action, makeObservable, observable, runInAction, */makeAutoObservable } from "mobx";
+import { makeAutoObservable } from "mobx";
 import { Activity } from "../../models/activity";
 import agent from "../api/agent";
-import { v4 as uuid } from 'uuid';
 
 export default class ActivityStore {
-    // title = 'Hello from MobX!';
-
-    // activities: Activity[] = [];
-    activities = new Map<string, Activity>();
-    selectedActivity: Activity | undefined = undefined;
-    editMode = false;
-    loading = false;
-    loadingInitial = true;
-
     constructor() {
-        // makeObservable(this, {
-        //     title: observable,
-        //     setTitle: action//.bound [use '.bound' if not using ' = () => ' on function declaration of setTitle()'
-        // })
-
         makeAutoObservable(this)
+    }
+
+    activities = new Map<string, Activity>();
+    // selectedActivity: Activity | undefined = undefined;
+    // editMode = false;
+    loading = false;
+    loadingInitial = false;
+
+    setActivity = (activity: Activity) => {
+        activity.date = activity.date.split('T')[0];
+        this.activities.set(activity.id, activity);
+    }
+
+    deleteActivity = (id: string) => {
+        this.activities.delete(id);
+    }
+
+    setLoading = (state: boolean) => {
+        this.loading = state;
+    }
+
+    setLoadingInitial = (state: boolean) => {
+        this.loadingInitial = state;
     }
 
     get activitiesByDate() {
         return Array.from(this.activities.values()).sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
     }
 
-    // setTitle() {
-    //     this.title = this.title + '!';
+    // private getActivity = (id: string) => {
+    //     return this.activities.get(id);
     // }
 
-    // setTitle = () => {
-    //     this.title = this.title + '!';
-    // }
+    loadActivity = async (id: string) => {
+        // let activity = this.getActivity(id);
+        let activity = this.activities.get(id);
 
-    load = async () => {
+        if (activity) {
+            return activity;
+        } else {
+            this.setLoadingInitial(true);
+
+            try {
+                activity = await agent.Activities.details(id);
+                this.setActivity(activity);
+                this.setLoadingInitial(false);
+                return activity;
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        this.setLoadingInitial(false);
+    }
+
+    loadActivities = async () => {
+        this.setLoadingInitial(true);
+
         try {
             const activities = await agent.Activities.list();
-            // runInAction(() => { [when didn't use 'setLoadingInitial' error would appear because cannot modify observable values withouth using an action]
-                activities.forEach(activity => {
-                    activity.date = activity.date.split('T')[0];
-                    this.activities.set(activity.id, activity);
-                    // this.activities.push(activity);
-                })
-            // })
+
+            activities.forEach(activity => {
+                this.setActivity(activity);
+            })
         } catch (error) {
             console.log(error);
         }
@@ -51,45 +76,18 @@ export default class ActivityStore {
         this.setLoadingInitial(false);
     }
 
-    setLoadingInitial = (state: boolean) => {
-        this.loadingInitial = state;
-    }
-
-    select = (id: string) => {
-        // this.selectedActivity = this.activities.find(activity => activity.id === id);
-        this.selectedActivity = this.activities.get(id);
-    }
-
-    deselect = () => {
-        this.selectedActivity = undefined;
-    }
-
-    openForm = (id?: string) => {
-        id ? this.select(id) : this.deselect();
-        this.editMode = true;
-    }
-
-    closeForm = () => {
-        this.editMode = false;
-    }
-
     create = async (activity: Activity) => {
         this.loading = true;
-        activity.id = uuid();
 
         try {
             await agent.Activities.create(activity);
 
-                // this.activities.push(activity);
-                this.activities.set(activity.id, activity);
-                this.selectedActivity = activity;
-                this.editMode = false;
-            
+            this.setActivity(activity);
         } catch (error) {
             console.log(error);
         }
 
-        this.loading = false;
+        this.setLoading(false);
     }
 
     update = async (activity: Activity) => {
@@ -98,16 +96,13 @@ export default class ActivityStore {
         try {
             await agent.Activities.update(activity);
 
-                // this.activities = [...this.activities.filter(filteredActivity => filteredActivity.id !== activity.id), activity];
-                this.activities.set(activity.id, activity);
-                this.selectedActivity = activity;
-                this.editMode = false;
+            this.setActivity(activity);
             
         } catch (error) {
             console.log(error);
         }
 
-        this.loading = false;
+        this.setLoading(false);
     }
 
     delete = async (id: string) => {
@@ -116,14 +111,12 @@ export default class ActivityStore {
         try {
             await agent.Activities.delete(id);
 
-                // this.activities = [...this.activities.filter(activity => activity.id !== id)];
-                this.activities.delete(id);
-                if (this.selectedActivity?.id === id) this.deselect();
+            this.deleteActivity(id);
 
         } catch (error) {
             console.log(error);
         }
 
-        this.loading = false;
+        this.setLoading(false);
     }
 }

@@ -1,24 +1,20 @@
-import React from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import { Button, Container, Menu } from 'semantic-ui-react';
-import { useStore } from '../stores/store';
 
-// interface Props {
-//     openForm: () => void;
-// }
-
-export default function NavBar(/*{ openForm }: Props*/) {
-    const { activityStore } = useStore();
-
+export default function NavBar() {
     return (
         <Menu inverted fixed='top'>
             <Container>
-                <Menu.Item>
+                <Menu.Item as={ NavLink } to='/' exact header>
                     <img src="/assets/logo.png" alt="logo" style={{ marginRight: '10px' }} />
                     Reactivities
                 </Menu.Item>
-                <Menu.Item name = 'Activities' />
+                <Menu.Item name='Activities' as={ NavLink } to='/activities' />
                 <Menu.Item>
-                    <Button onClick={ /*openForm*/ () => activityStore.openForm() } positive content='Create Activity' />
+                    <Button
+                        as={ Link } to='/createActivity'
+                        positive content='Create Activity'
+                    />
                 </Menu.Item>
             </Container>
         </Menu>

@@ -1,20 +1,31 @@
-import React from "react";
+import { observer } from "mobx-react-lite";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 import { Button, Card, Image } from "semantic-ui-react";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { useStore } from "../../../app/stores/store";
-// import { Activity } from "../../../models/activity";
 
-// interface Props {
-  // activity: Activity;
-  // cancelSelectActivity: () => void;
-  // openForm: (id: string) => void;
-// }
-
-export default function ActivityList(/*{ activity, cancelSelectActivity, openForm }: Props*/) {
+export default observer(function ActivityDetails() {
   const { activityStore } = useStore();
-  const { selectedActivity } = activityStore;
+  // const { selectedActivity } = activityStore;
+  const { id } = useParams<{id: string}>();
 
-  if (!selectedActivity) return <LoadingComponent />;
+  const [selectedActivity, setActivity] = useState({
+    id: '',
+    title: '',
+    description: '',
+    category: '',
+    date: '',
+    city: '',
+    venue: ''
+  });
+
+  useEffect(() => {
+    if (id) activityStore.loadActivity(id).then(activity => setActivity(activity!));
+  }, [id, activityStore]);
+
+  if (activityStore.loadingInitial || !selectedActivity) return <LoadingComponent />;
 
   return (
     <Card fluid>
@@ -30,10 +41,10 @@ export default function ActivityList(/*{ activity, cancelSelectActivity, openFor
       </Card.Content>
       <Card.Content extra>
           <Button.Group widths='2'>
-              <Button onClick={ () => activityStore.openForm(selectedActivity.id) } basic color='blue' content='Edit' />
-              <Button onClick={ activityStore.deselect } basic color='grey' content='Cancel' />
+              <Button as={ Link } to={ `/edit/${selectedActivity.id}` } basic color='blue' content='Edit' />
+              <Button as={ Link } to='/activities' basic color='grey' content='Cancel' />
           </Button.Group>
       </Card.Content>
     </Card>
   );
-}
+})

@@ -1,19 +1,12 @@
 import { observer } from 'mobx-react-lite';
-import React, { SyntheticEvent, useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button, Item, Label, Segment } from 'semantic-ui-react';
 import { useStore } from '../../../app/stores/store';
-// import { Activity } from '../../../models/activity';
 
-// interface Props {
-//     activities: Activity[];
-//     submitting: boolean;
-//     // selectActivity: (id: string) => void;
-//     deleteActivity: (id: string) => void;
-// }
-
-export default observer(function ActivityList(/*{ activities, submitting, selectActivity, deleteActivity }: Props*/) {
+export default observer(function ActivityList() {
     const { activityStore } = useStore();
-    const { activitiesByDate } = activityStore;
+    const { activitiesByDate: activities } = activityStore;
 
     const [target, setTarget] = useState('');
 
@@ -25,7 +18,7 @@ export default observer(function ActivityList(/*{ activities, submitting, select
     return (
         <Segment>
             <Item.Group divided>
-                { activitiesByDate.map(activity => (
+                { activities.map(activity => (
                     <Item key={ activity.id }>
                         <Item.Content>
                             <Item.Header as='a'>{ activity.title }</Item.Header>
@@ -42,7 +35,7 @@ export default observer(function ActivityList(/*{ activities, submitting, select
                                     floated='right' content='Delete' color='red'
                                 />
                                 <Button
-                                    onClick={ () => activityStore.select(activity.id) }
+                                    as={ Link } to={ `/activities/${activity.id}` }
                                     floated='right' content='View' color='blue'
                                 />
                                 <Label basic content={ activity.category } />

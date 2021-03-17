@@ -1,24 +1,18 @@
 import { observer } from 'mobx-react-lite';
-import React, { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { useHistory, useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Button, Form, Segment } from 'semantic-ui-react';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
 import { useStore } from '../../../app/stores/store';
-// import { Activity } from '../../../models/activity';
-
-// interface Props {
-//     // activity: Activity | undefined;
-//     submitting: boolean;
-//     // closeForm: () => void;
-//     createOrEdit: (activity: Activity) => void;
-// }
+import { v4 as uuid } from 'uuid';
   
-export default observer(function ActivityForm(/*{ submitting, createOrEdit */
-    // activity: selectedActivity /*using ':' changes the name of variable*/, closeForm*/ 
-    /*}: Props*/) {
-
+export default observer(function ActivityForm() {
+    const history = useHistory();
     const { activityStore } = useStore();
-    const { selectedActivity } = activityStore;
+    const {id} = useParams<{id: string}>();
 
-    const initialState = selectedActivity ?? {
+    const [formActivity, setActivity] = useState({
         id: '',
         title: '',
         description: '',
@@ -26,19 +20,36 @@ export default observer(function ActivityForm(/*{ submitting, createOrEdit */
         date: '',
         city: '',
         venue: ''
-    }
+    });
 
-    const [formActivity, setActivity] = useState(initialState);
+    useEffect(() => {
+        if (id) activityStore.loadActivity(id).then(activity => setActivity(activity!));
+    }, [id, activityStore])
 
     function handleSubmit() {
-        formActivity.id ? activityStore.update(formActivity) : activityStore.create(formActivity);
-        // createOrEdit(formActivity);
+        if (formActivity.id.length === 0) {
+            formActivity.id = uuid();
+            // let newActivity = {
+            //     ...formActivity,
+            //     id: uuid()
+            // };
+
+            activityStore.create(formActivity).then(() => {
+                history.push(`/activities/${formActivity.id}`);
+            })
+        } else {
+            activityStore.update(formActivity).then(() => {
+                history.push(`/activities/${formActivity.id}`);
+            });
+        }
     }
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         const { name, value } = event.target;
         setActivity({ ...formActivity, [name]: value })
     }
+
+    if (activityStore.loadingInitial) return <LoadingComponent content='Loading Activity...' />
 
     return (
         <Segment clearing>
@@ -50,7 +61,7 @@ export default observer(function ActivityForm(/*{ submitting, createOrEdit */
                 <Form.Input placeholder='City' value={ formActivity.city } name='city' onChange={ handleInputChange } />
                 <Form.Input placeholder='Venue' value={ formActivity.venue } name='venue' onChange={ handleInputChange } />
                 <Button loading={ activityStore.loading } floated='right' positive type='submit' content='Submit' />
-                <Button onClick={ activityStore.closeForm } floated='right' type='button' content='Cancel' />
+                <Button as={ Link } to='/activities' floated='right' type='button' content='Cancel' />
             </Form>
         </Segment>
     );
