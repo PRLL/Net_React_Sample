@@ -23,7 +23,7 @@ export default observer(function ActivityForm() {
     });
 
     useEffect(() => {
-        if (id) activityStore.loadActivity(id).then(activity => setActivity(activity!));
+        if (id) activityStore.detail(id).then(activity => setActivity(activity!));
     }, [id, activityStore])
 
     function handleSubmit() {

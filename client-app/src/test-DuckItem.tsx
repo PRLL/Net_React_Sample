@@ -1,4 +1,3 @@
-import React from 'react';
 import { Duck } from './test-typescript_stuff';
 
 interface Props {
