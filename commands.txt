@@ -27,13 +27,18 @@ dotnet watch run
 Microsoft.EntityFrameworkCore.Design [ API ]
 MediatR.Extensions.Microsoft.DependencyInjection [ Application ]
 AutoMapper.Extensions.Microsoft.DependencyInjection [ Application ]
+FluentValidation.AspNetCore [ Application ]
 
 // @ migration .net
+cd ../ [on root]
 dotnet tool list --global
 dotnet tool install --global dotnet-ef --version 5.0.3
 dotnet tool update --global dotnet-ef --version 5.0.3
 dotnet ef migrations add InitialCreate -p .\Persistence\ -s .\API\
 
+// @drop db .net
+cd ../ [on root]
+dotnet ef database drop -s API -p Persistence
 
 // @ git .net
 dotnet new gitignore
@@ -41,7 +46,8 @@ dotnet new gitignore
 
 
 
-
+@REACT
+cd client-app
 
 // @ create react
 npx create-react-app client-app --use-npm --template typescript
@@ -58,6 +64,7 @@ npm install react-router-dom
     npm install @types/react-router-dom --save-dev
 npm install react-calendar
     npm install @types/react-calendar
+npm install react-toastify
 
 // @run react
 npm start

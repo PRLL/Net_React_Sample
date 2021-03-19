@@ -16,6 +16,7 @@ export default function NavBar() {
                         positive content='Create Activity'
                     />
                 </Menu.Item>
+                <Menu.Item name='Error Validation Test' as={ NavLink } to='/errors' />
             </Container>
         </Menu>
     )
