@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button, Icon, Item, Segment } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import { Activity } from "../../../app/models/activity";
+import { format } from "date-fns";
 
 interface Props {
     activity: Activity
@@ -32,7 +33,7 @@ export default function ActivityListItem({ activity } : Props) {
             </Segment>
             <Segment>
                 <span>
-                    <Icon name='clock' />{ activity.date }
+                    <Icon name='clock' />{ format(activity.date!, 'dd MMM yyyy h:mm aa') }
                     <Icon name='marker' />{ activity.venue }
                 </span>
             </Segment>
@@ -53,29 +54,5 @@ export default function ActivityListItem({ activity } : Props) {
                 />
             </Segment>
         </Segment.Group>
-
-        // <Item key={ activity.id }>
-        //     <Item.Content>
-        //         <Item.Header as='a'>{ activity.title }</Item.Header>
-        //         <Item.Meta>{ activity.date }</Item.Meta>
-        //         <Item.Description>
-        //             <div>{ activity.description }</div>
-        //             <div>{ activity.city }, { activity.venue }</div>
-        //         </Item.Description>
-        //         <Item.Extra>
-        //             <Button
-        //                 name={ activity.id }
-        //                 loading={ activityStore.loading && target === activity.id }
-        //                 onClick={ (event) => handleActivityDelete(event, activity.id) }
-        //                 floated='right' content='Delete' color='red'
-        //             />
-        //             <Button
-        //                 as={ Link } to={ `/activities/${activity.id}` }
-        //                 floated='right' content='View' color='blue'
-        //             />
-        //             <Label basic content={ activity.category } />
-        //         </Item.Extra>
-        //     </Item.Content>
-        // </Item>
     )
 }

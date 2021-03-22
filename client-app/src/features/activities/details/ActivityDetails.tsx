@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Grid } from "semantic-ui-react";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
+import { Activity } from "../../../app/models/activity";
 import { useStore } from "../../../app/stores/store";
 import ActivityDetailedChat from "./ActivityDetailedChat";
 import ActivityDetailedHeader from "./ActivityDetailedHeader";
@@ -11,15 +12,14 @@ import ActivityDetailedSidebar from "./ActivityDetailedSidebar";
 
 export default observer(function ActivityDetails() {
   const { activityStore } = useStore();
-  // const { selectedActivity } = activityStore;
   const { id } = useParams<{id: string}>();
 
-  const [selectedActivity, setActivity] = useState({
+  const [selectedActivity, setActivity] = useState<Activity>({
     id: '',
     title: '',
     description: '',
     category: '',
-    date: '',
+    date: null,
     city: '',
     venue: ''
   });
@@ -41,24 +41,5 @@ export default observer(function ActivityDetails() {
         <ActivityDetailedSidebar />
       </Grid.Column>
     </Grid>
-
-    // <Card fluid>
-    //   <Image src={`/assets/categoryImages/${ selectedActivity.category }.jpg`} />
-    //   <Card.Content>
-    //     <Card.Header>{ selectedActivity.title }</Card.Header>
-    //     <Card.Meta>
-    //       <span>{ selectedActivity.date }</span>
-    //     </Card.Meta>
-    //     <Card.Description>
-    //       { selectedActivity.description }
-    //     </Card.Description>
-    //   </Card.Content>
-    //   <Card.Content extra>
-    //       <Button.Group widths='2'>
-    //           <Button as={ Link } to={ `/edit/${selectedActivity.id}` } basic color='blue' content='Edit' />
-    //           <Button as={ Link } to='/activities' basic color='grey' content='Cancel' />
-    //       </Button.Group>
-    //   </Card.Content>
-    // </Card>
   );
 })

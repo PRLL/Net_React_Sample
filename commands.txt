@@ -65,6 +65,11 @@ npm install react-router-dom
 npm install react-calendar
     npm install @types/react-calendar
 npm install react-toastify
+npm install formik
+npm install yup
+    npm install @types/yup --save-dev
+npm install react-datepicker
+    npm install @types/react-datepicker --save-dev
 
 // @run react
 npm start
