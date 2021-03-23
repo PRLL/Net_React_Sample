@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Application.Activities;
 using System.Threading;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
