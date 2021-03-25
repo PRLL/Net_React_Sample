@@ -5,11 +5,13 @@ dotnet new webapi -n API
 dotnet new classlib -n Application
 dotnet new classlib -n Domain
 dotnet new classlib -n Persistence
+dotnet new classlib -n Infrastructure
 
 dotnet sln add .\API\API.csproj
 dotnet sln add .\Application\
 dotnet sln add .\Persistence\
 dotnet sln add .\Domain\
+dotnet sln add .\Infrastructure\
 
 cd API
 dotnet add reference ..\Application\
@@ -17,7 +19,10 @@ cd ..\Application\
 dotnet add reference ..\Persistence\
 cd ..\Persistence\
 dotnet add reference ..\Domain\
-
+cd ..\Infrastructure\
+dotnet add reference ..\Application\
+cd ..\API\
+dotnet add reference ..\Infrastructure\
 
 // @ run .net
 cd API
@@ -38,8 +43,8 @@ cd ../ [on root]
 dotnet tool list --global
 dotnet tool install --global dotnet-ef --version 5.0.3
 dotnet tool update --global dotnet-ef --version 5.0.3
-dotnet ef migrations add InitialCreate -p .\Persistence\ -s .\API\
-dotnet ef migrations add IdentityAdded -p .\Persistence\ -s .\API\
+dotnet ef migrations add MigrationName -p .\Persistence\ -s .\API\
+dotnet ef migrations remove -p .\Persistence\ -s .\API\
 
 // @drop db .net
 cd ../ [on root]
@@ -50,6 +55,9 @@ dotnet new gitignore (on root??)
 
 // @ restore .net
 dotnet restore (in case any errors)
+
+// @ errors resolve
+AsNoTracking() (sometimes the dbContext will mess up because stores data even after finished) 
 
 
 

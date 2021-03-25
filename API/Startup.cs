@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using API.Services;
 using Application.Activities;
 using Application.Core;
+using Application.Interfaces;
 using Domain;
 using FluentValidation.AspNetCore;
+using Infrastructure.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -44,9 +46,9 @@ namespace API
                 //makes all endpoint have to authenticate unless stated otherwise
                 mvcOptions.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
             })
-            .AddFluentValidation(config =>
+            .AddFluentValidation(fluentValidationMvcConfiguration =>
             {
-                config.RegisterValidatorsFromAssemblyContaining<Create>();
+                fluentValidationMvcConfiguration.RegisterValidatorsFromAssemblyContaining<Create>();
             });
 
             services.AddSwaggerGen(swaggerGenOptions =>
@@ -59,17 +61,19 @@ namespace API
                 dbContextOptionsBuilder.UseSqlite(this._configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddCors(options =>
+            services.AddCors(corsOptions =>
             {
-                options.AddPolicy("CorsPolicy", policy =>
+                corsOptions.AddPolicy("CorsPolicy", corsPolicyBuilder =>
                 {
-                    policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
+                    corsPolicyBuilder.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
                 });
             });
 
             services.AddMediatR(typeof(List.Handler).Assembly);
 
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+
+            services.AddScoped<IUserAccessor, UserAccessor>();
 
             services.AddIdentityCore<AppUser>(identityOptions => {
                 identityOptions.Password.RequireDigit = false;
@@ -93,6 +97,17 @@ namespace API
                         ValidateAudience = false
                     };
                 });
+
+            services.AddAuthorization(authorizationOptions => 
+            {
+                authorizationOptions.AddPolicy("IsActivityHost", authorizationPolicyBuilder =>
+                {
+                    authorizationPolicyBuilder.Requirements.Add(new IsHostRequirement());
+                });
+            });
+
+            services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
+
             services.AddScoped<TokenService>();
         }
 

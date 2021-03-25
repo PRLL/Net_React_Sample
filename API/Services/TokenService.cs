@@ -26,16 +26,17 @@ namespace API.Services
                     new SecurityTokenDescriptor
                     {
                         Subject = new ClaimsIdentity(
-                                    new List<Claim>
-                                        {
-                                            new Claim(ClaimTypes.NameIdentifier, user.Id),
-                                            new Claim(ClaimTypes.Name, user.UserName),
-                                            new Claim(ClaimTypes.Email, user.Email)
-                                        }),
+                            new List<Claim>
+                                {
+                                    new Claim(ClaimTypes.NameIdentifier, user.Id),
+                                    new Claim(ClaimTypes.Name, user.UserName),
+                                    new Claim(ClaimTypes.Email, user.Email)
+                                }),
                         Expires = DateTime.Now.AddDays(7),
                         SigningCredentials = new SigningCredentials(
-                                                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._config["TokenKey"])),
-                                                                            SecurityAlgorithms.HmacSha512Signature)
+                            new SymmetricSecurityKey(
+                                Encoding.UTF8.GetBytes(this._config["TokenKey"])),
+                                SecurityAlgorithms.HmacSha512Signature)
                     }));
         }
     }
