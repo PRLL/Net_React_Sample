@@ -1,24 +1,52 @@
-import { makeAutoObservable } from "mobx";
-import { Activity } from "../models/activity";
+import { makeAutoObservable, runInAction } from "mobx";
+import { Activity, ActivityFormValues } from "../models/activity";
 import agent from "../api/agent";
 import { format } from "date-fns";
+import { store } from "./store";
+import { Profile } from "../models/profiles";
 
 export default class ActivityStore {
+    activities = new Map<string, Activity>();
+    selectedActivity: Activity | undefined = undefined;
+    loading = false;
+    loadingInitial = false;
+
     constructor() {
         makeAutoObservable(this)
     }
 
-    activities = new Map<string, Activity>();
-    loading = false;
-    loadingInitial = false;
-
     setActivity = (activity: Activity) => {
+        const user = store.userStore.user;
+        if (user) {
+            activity.isGoing = activity.attendees!.some(
+                attendee => attendee.username === user.username
+            )
+            activity.isHost = activity.hostUsername === user.username;
+            activity.host = activity.attendees?.find(attendee => attendee.username === activity.hostUsername)
+        }
+
         activity.date = new Date(activity.date!)
         this.activities.set(activity.id, activity);
     }
 
     deleteActivity = (id: string) => {
         this.activities.delete(id);
+    }
+
+    setSelectedActivity = (activity: Activity) => {
+        this.selectedActivity = activity;
+    }
+
+    setSelectedActivityAttendees = (attendees: Profile[]) => {
+        this.selectedActivity!.attendees = attendees;
+    }
+
+    setSelectedActivityIsGoing = (isGoing: boolean) => {
+        this.selectedActivity!.isGoing = isGoing;
+    }
+
+    setSelectedActivityIsCancelled = (isCancelled: boolean) => {
+        this.selectedActivity!.isCancelled = isCancelled;
     }
 
     setLoading = (state: boolean) => {
@@ -47,13 +75,16 @@ export default class ActivityStore {
         let activity = this.activities.get(id);
 
         if (activity) {
+            this.setSelectedActivity(activity);
             return activity;
         } else {
             this.setLoadingInitial(true);
 
             try {
                 activity = await agent.Activities.details(id);
+
                 this.setActivity(activity);
+                this.setSelectedActivity(activity);
                 this.setLoadingInitial(false);
                 return activity;
             } catch (error) {
@@ -80,33 +111,36 @@ export default class ActivityStore {
         this.setLoadingInitial(false);
     }
 
-    create = async (activity: Activity) => {
-        this.loading = true;
+    create = async (activity: ActivityFormValues) => {
+        const user = store.userStore.user;
+        const attendee = new Profile(user!);
 
         try {
             await agent.Activities.create(activity);
-
-            this.setActivity(activity);
+            const newActivity = new Activity(activity);
+            newActivity.hostUsername = user!.username;
+            newActivity.attendees = [attendee];
+            this.setActivity(newActivity);
+            this.setSelectedActivity(newActivity);
         } catch (error) {
             console.log(error);
         }
-
-        this.setLoading(false);
     }
 
-    update = async (activity: Activity) => {
-        this.loading = true;
-
+    update = async (activity: ActivityFormValues) => {
         try {
             await agent.Activities.update(activity);
 
-            this.setActivity(activity);
-            
+            runInAction(() => {
+                if (activity.id) {
+                    let updatedActivity = { ...this.detail(activity.id), ...activity }
+                    this.activities.set(activity.id, updatedActivity as unknown as Activity);
+                    this.setSelectedActivity(updatedActivity as unknown as Activity);
+                }
+            })
         } catch (error) {
             console.log(error);
         }
-
-        this.setLoading(false);
     }
 
     delete = async (id: string) => {
@@ -116,7 +150,46 @@ export default class ActivityStore {
             await agent.Activities.delete(id);
 
             this.deleteActivity(id);
+        } catch (error) {
+            console.log(error);
+        }
 
+        this.setLoading(false);
+    }
+
+    attend = async () => {
+        this.setLoading(true);
+        
+        const user = store.userStore.user;
+        try {
+            await agent.Activities.attend(this.selectedActivity!.id);
+            if (this.selectedActivity?.isGoing) {
+                this.setSelectedActivityAttendees(this.selectedActivity!.attendees?.filter(a => a.username !== user?.username)!);
+                this.setSelectedActivityIsGoing(false);
+            } else {
+                const attendee = new Profile(user!);
+                const attendees = this.selectedActivity?.attendees!;
+                attendees.push(attendee);
+                this.setSelectedActivityAttendees(attendees);
+                this.setSelectedActivityIsGoing(false);
+            }
+
+            this.setActivity(this.selectedActivity!);
+        } catch (error) {
+            console.log(error);
+        }
+
+        this.setLoading(false);
+    }
+
+    cancel = async () => {
+        this.loading = true;
+
+        try {
+            await agent.Activities.attend(this.selectedActivity!.id);
+
+            this.setSelectedActivityIsCancelled(!this.selectedActivity?.isCancelled);
+            this.setActivity(this.selectedActivity!);
         } catch (error) {
             console.log(error);
         }
