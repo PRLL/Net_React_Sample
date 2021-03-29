@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using API.DTOs;
@@ -28,8 +29,10 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
-            var user = await this._userManager.FindByEmailAsync(loginDto.Email);
-
+            // var user = await this._userManager.FindByEmailAsync(loginDto.Email);
+            var user = await this._userManager.Users
+                .Include(appUser => appUser.Photos)
+                .FirstOrDefaultAsync(appUser => appUser.Email == loginDto.Email);
             if (user == null) return Unauthorized();
 
             var result = await this._signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
@@ -70,7 +73,10 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
-            var user = await this._userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
+            // var user = await this._userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
+            var user = await this._userManager.Users
+                .Include(appUser => appUser.Photos)
+                .FirstOrDefaultAsync(appUser => appUser.Email == User.FindFirstValue(ClaimTypes.Email));
 
             return this.CreateUser(user);
         }
@@ -81,7 +87,7 @@ namespace API.Controllers
             {
                 Username = user.UserName,
                 DisplayName = user.DisplayName,
-                Image = null,
+                Image = user.Photos?.FirstOrDefault(photo => photo.IsMain)?.Url,
                 Token = this._tokenService.CreateToken(user)
             };
         }
