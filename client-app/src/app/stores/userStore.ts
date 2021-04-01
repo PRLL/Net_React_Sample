@@ -15,6 +15,10 @@ export default class UserStore {
         this.user = user;
     }
 
+    setUserImage = (image: string) => {
+        if (this.user) this.user.image = image;
+    }
+
     getUser = async () => {
         try {
             const user = await agent.Account.current();

@@ -86,6 +86,8 @@ npm install yup
     npm install @types/yup --save-dev
 npm install react-datepicker
     npm install @types/react-datepicker --save-dev
+npm install react-dropzone
+npm install react-cropper
 
 // @run react
 npm start
