@@ -8,12 +8,20 @@ interface Props {
 }
 
 export default observer(function ProfileCard({ profile } : Props) {
+    function truncateBio(bio: string | undefined) {
+        if (bio) {
+            return bio.length > 40 
+                ? bio.substring(0, 37) + '...'
+                : bio;
+        }
+    }
+
     return (
         <Card as={ Link } to={ `/profiles/${profile.username}` }>
             <Image src={ profile.image || '/assets/user.png'} />
             <Card.Content>
                 <Card.Header>{ profile.displayName }</Card.Header>
-                <Card.Description>Bio...</Card.Description>
+                <Card.Description>{ truncateBio(profile.bio) }</Card.Description>
             </Card.Content>
             <Card.Content extra>
                 <Icon name='user' />

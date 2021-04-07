@@ -106,6 +106,24 @@ export default class ProfileStore {
         this.setMainLoading(false);
     }
 
+    update = async (profile: Partial<Profile>) => {
+        this.setMainLoading(true);
+
+        try {
+            await agent.Profiles.update(profile);
+
+            if (profile.displayName && profile.displayName !== store.userStore.user?.displayName) {
+                store.userStore.setDisplayName(profile.displayName);
+            }
+
+            this.setProfile({ ...this.profile, ...profile as Profile });
+        } catch (error) {
+            console.log(error);
+        }
+
+        this.setMainLoading(false);
+    }
+
     deletePhoto = async (photo: Photo) => {
         this.setMainLoading(true);
 

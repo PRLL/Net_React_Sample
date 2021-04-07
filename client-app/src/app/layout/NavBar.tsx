@@ -4,7 +4,7 @@ import { Button, Container, Dropdown, Image, Menu } from 'semantic-ui-react';
 import { useStore } from '../stores/store';
 
 export default observer(function NavBar() {
-    const { userStore: {user, logout} } = useStore();
+    const { userStore: { user, logout } } = useStore();
 
     return (
         <Menu inverted fixed='top'>
