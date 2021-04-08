@@ -14,18 +14,9 @@ export default observer(function ActivityDetails() {
   const { selectedActivity: activity } = activityStore;
   const { id } = useParams<{id: string}>();
 
-  // const [selectedActivity, setActivity] = useState<Activity>({
-  //   id: '',
-  //   title: '',
-  //   description: '',
-  //   category: '',
-  //   date: null,
-  //   city: '',
-  //   venue: ''
-  // });
-
   useEffect(() => {
-    if (id) activityStore.detail(id);//.then(activity => {console.log("setting: " + activity); setActivity(activity!)});
+    if (id) activityStore.detail(id);
+    return () => activityStore.setSelectedActivity(undefined);
   }, [id, activityStore]);
 
   if (activityStore.loadingInitial || !activity) return <LoadingComponent content='Fetching Activity...' />;
@@ -35,7 +26,7 @@ export default observer(function ActivityDetails() {
       <Grid.Column width='10'>
         <ActivityDetailedHeader activity={ activity }/>
         <ActivityDetailedInfo  activity={ activity }/>
-        <ActivityDetailedChat />
+        <ActivityDetailedChat activityId={ activity.id } />
       </Grid.Column>
       <Grid.Column width='6'>
         <ActivityDetailedSidebar activity={ activity }/>

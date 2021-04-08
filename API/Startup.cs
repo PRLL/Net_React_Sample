@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using API.Services;
+using API.SignalR;
 using Application.Activities;
 using Application.Core;
 using Application.Interfaces;
@@ -66,7 +67,11 @@ namespace API
             {
                 corsOptions.AddPolicy("CorsPolicy", corsPolicyBuilder =>
                 {
-                    corsPolicyBuilder.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
+                    corsPolicyBuilder
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials()
+                        .WithOrigins("http://localhost:3000");
                 });
             });
 
@@ -79,6 +84,8 @@ namespace API
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
 
             services.Configure<CloudinarySettings>(this._configuration.GetSection("Cloudinary"));
+
+            services.AddSignalR();
 
             services.AddIdentityCore<AppUser>(identityOptions => {
                 identityOptions.Password.RequireDigit = false;
@@ -100,6 +107,21 @@ namespace API
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._configuration["TokenKey"])),
                         ValidateIssuer = false,
                         ValidateAudience = false
+                    };
+
+                    jwtBearerOptions.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = messageReceivedContext =>
+                        {
+                            var accessToken = messageReceivedContext.Request.Query["access_token"];
+                            if (!string.IsNullOrEmpty(accessToken) 
+                                && (messageReceivedContext.HttpContext.Request.Path.StartsWithSegments("/chat")))
+                            {
+                                messageReceivedContext.Token = accessToken;
+                            }
+
+                            return Task.CompletedTask;
+                        }
                     };
                 });
 
@@ -138,6 +160,7 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chat");
             });
         }
     }

@@ -88,6 +88,7 @@ npm install react-datepicker
     npm install @types/react-datepicker --save-dev
 npm install react-dropzone
 npm install react-cropper
+npm install @microsoft/signalr
 
 // @run react
 npm start

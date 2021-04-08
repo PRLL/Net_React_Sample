@@ -10,7 +10,7 @@ interface Props {
 export default observer(function ProfileCard({ profile } : Props) {
     function truncateBio(bio: string | undefined) {
         if (bio) {
-            return bio.length > 40 
+            return bio.length > 40
                 ? bio.substring(0, 37) + '...'
                 : bio;
         }

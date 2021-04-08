@@ -33,7 +33,7 @@ export default class ActivityStore {
         this.activities.delete(id);
     }
 
-    setSelectedActivity = (activity: Activity) => {
+    setSelectedActivity = (activity: Activity | undefined) => {
         this.selectedActivity = activity;
     }
 
@@ -196,4 +196,8 @@ export default class ActivityStore {
 
         this.setLoading(false);
     }
+
+    // clearSelectedActivity = () => {
+    //     this.setSelectedActivity(undefined);
+    // }
 }

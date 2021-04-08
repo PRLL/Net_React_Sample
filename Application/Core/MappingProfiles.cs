@@ -1,5 +1,6 @@
 using System.Linq;
 using Application.Activities;
+using Application.Comments;
 using AutoMapper;
 using Domain;
 
@@ -10,10 +11,12 @@ namespace Application.Core
         public MappingProfiles()
         {
             CreateMap<Activity, Activity>();
+
             CreateMap<Activity, ActivityDto>()
                 .ForMember(destinationMember => destinationMember.HostUsername, memberOptions => memberOptions
                     .MapFrom(sourceMember => sourceMember.Attendees
                         .FirstOrDefault(activityAttendee => activityAttendee.IsHost).AppUser.UserName));
+
             CreateMap<ActivityAttendee, Profiles.Profile>()
                 .ForMember(destinationMember => destinationMember.DisplayName, memberOptions => memberOptions
                     .MapFrom(sourceMember => sourceMember.AppUser.DisplayName))
@@ -21,6 +24,7 @@ namespace Application.Core
                     .MapFrom(sourceMember => sourceMember.AppUser.UserName))
                 .ForMember(destinationMember => destinationMember.Bio, memberOptions => memberOptions
                     .MapFrom(sourceMember => sourceMember.AppUser.Bio));
+
             CreateMap<ActivityAttendee, AttendeeDto>()
                 .ForMember(destinationMember => destinationMember.DisplayName, memberOptions => memberOptions
                     .MapFrom(sourceMember => sourceMember.AppUser.DisplayName))
@@ -31,9 +35,19 @@ namespace Application.Core
                 .ForMember(destinationMember => destinationMember.Image, memberOptions => memberOptions
                     .MapFrom(sourceMember => sourceMember.AppUser.Photos
                         .FirstOrDefault(photo => photo.IsMain).Url));
+
             CreateMap<AppUser, Profiles.Profile>()
                 .ForMember(destinationMember => destinationMember.Image, memberOptions => memberOptions
                     .MapFrom(sourceMember => sourceMember.Photos
+                        .FirstOrDefault(photo => photo.IsMain).Url));
+
+            CreateMap<Comment, CommentDto>()
+                .ForMember(destinationMember => destinationMember.DisplayName, memberOptions => memberOptions
+                    .MapFrom(sourceMember => sourceMember.Author.DisplayName))
+                .ForMember(destinationMember => destinationMember.Username, memberOptions => memberOptions
+                    .MapFrom(sourceMember => sourceMember.Author.UserName))
+                .ForMember(destinationMember => destinationMember.Image, memberOptions => memberOptions
+                    .MapFrom(sourceMember => sourceMember.Author.Photos
                         .FirstOrDefault(photo => photo.IsMain).Url));
         }
     }
