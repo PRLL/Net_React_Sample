@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Core;
+using Application.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Persistence;
 
 namespace Application.Activities
@@ -21,21 +19,19 @@ namespace Application.Activities
         {
             private readonly DataContext _dataContext;
             private readonly IMapper _mapper;
-            public Handler(DataContext dataContext, IMapper mapper)
+            private readonly IUserAccessor _userAccessor;
+            public Handler(DataContext dataContext, IMapper mapper, IUserAccessor userAccessor)
             {
                 this._dataContext = dataContext;
                 this._mapper = mapper;
+                this._userAccessor = userAccessor;
             }
 
             public async Task<Result<List<ActivityDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var activities = await this._dataContext.Activities
-                    // .Include(activity => activity.Attendees)
-                    // .ThenInclude(activitiyAttendee => activitiyAttendee.AppUser)
-                    .ProjectTo<ActivityDto>(this._mapper.ConfigurationProvider)
+                    .ProjectTo<ActivityDto>(this._mapper.ConfigurationProvider, new { currentUsername = this._userAccessor.GetUserName() })
                     .ToListAsync(cancellationToken);
-
-                // var activitiesToReturn = this._mapper.Map<List<ActivityDto>>(activities);
 
                 return Result<List<ActivityDto>>.Success(activities);
             }

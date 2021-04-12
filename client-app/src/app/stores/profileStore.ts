@@ -1,20 +1,47 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, reaction } from "mobx";
 import agent from "../api/agent";
-import { Photo, Profile } from "../models/profiles"
+import { Photo, Profile } from "../models/profile"
 import { store } from "./store";
 
 export default class ProfileStore {
     profile: Profile | null = null;
     loading = false;
     mainLoading = false;
+    followingsLoading = false;
     uploading = false;
+    followings: Profile[] = [];
+    activeTab = 0;
 
     constructor() {
         makeAutoObservable(this);
+
+        reaction(
+            () => this.activeTab,
+            activeTab => {
+                switch (activeTab) {
+                    case 3:
+                        this.loadFollowings('followers');
+                        break;
+                    case 4:
+                        this.loadFollowings('following');
+                        break;
+                    default:
+                        this.followings = [];
+                }
+            }
+        )
     }
 
     setProfile = (profile: Profile) => {
         this.profile = profile;
+    }
+
+    setProfileFollowersCount = (count: number) => {
+        this.profile!.followersCount = count;
+    }
+
+    setProfileFollowingCount = (count: number) => {
+        this.profile!.followingCount = count;
     }
 
     filterProfilePhoto = (photoId: string) => {
@@ -22,6 +49,10 @@ export default class ProfileStore {
             this.profile.photos = this.profile.photos?.filter(p => p.id !== photoId);
         }
     }
+
+    setProfileFollowing = (state: boolean) => {
+        this.profile!.following = state;
+    } 
 
     pushProfilePhoto = (photo: Photo) => {
         this.profile?.photos?.push(photo);
@@ -43,8 +74,29 @@ export default class ProfileStore {
         this.mainLoading = state;
     }
 
+    setFollowingsLoading = (state: boolean) => {
+        this.followingsLoading = state;
+    }
+
     setUploading = (state: boolean) => {
         this.uploading = state;
+    }
+
+    setFollowings = (profiles: Profile[]) => {
+        this.followings = profiles;
+    }
+
+    setActiveTab = (activeTab: any) => {
+        this.activeTab = activeTab;
+    }
+
+    handleFollowingChange = (username: string) => {
+        this.followings.forEach(profile => {
+            if (profile.username === username) {
+                profile.following ? profile.followersCount-- : profile.followersCount++;
+                profile.following = !profile.following;
+            }
+        })
     }
 
     // this is called computed property
@@ -58,12 +110,26 @@ export default class ProfileStore {
         this.setLoading(true);
 
         try {
-            this.setProfile(await agent.Profiles.get(username));
+            this.setProfile(await agent.Profiles.details(username));
         } catch (error) {
             console.log(error);
         }
 
         this.setLoading(false);
+    }
+
+    loadFollowings = async (predicate: string) => {
+        this.setFollowingsLoading(true);
+
+        try {
+            console.log('3');
+            const followings = await agent.Profiles.listFollowings(this.profile!.username, predicate);
+            this.setFollowings(followings);
+        } catch (error) {
+            console.log(error);
+        }
+
+        this.setFollowingsLoading(false);
     }
 
     uploadPhoto = async (file: Blob) => {
@@ -117,6 +183,37 @@ export default class ProfileStore {
             }
 
             this.setProfile({ ...this.profile, ...profile as Profile });
+        } catch (error) {
+            console.log(error);
+        }
+
+        this.setMainLoading(false);
+    }
+
+    updateFollowing = async (username: string, following: boolean) => {
+        this.setMainLoading(true);
+
+        try {
+            await agent.Profiles.updateFollowing(username);
+
+            store.activityStore.updateAttendeeFollowing(username);
+
+            if (this.profile) {
+                if (this.profile.username === store.userStore.user?.username) {
+                    this.setProfileFollowingCount(
+                        following
+                            ? this.profile.followingCount + 1
+                            : this.profile.followingCount - 1);
+                } else if (this.profile.username === username) {
+                    this.setProfileFollowersCount(
+                        following
+                            ? this.profile.followersCount + 1
+                            : this.profile.followersCount - 1);
+                    this.setProfileFollowing(!this.profile.following);
+                }
+            }
+
+            this.handleFollowingChange(username);
         } catch (error) {
             console.log(error);
         }

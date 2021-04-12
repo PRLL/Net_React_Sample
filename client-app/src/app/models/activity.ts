@@ -1,4 +1,4 @@
-import { Profile } from "./profiles";
+import { Profile } from "./profile";
 
 export interface Activity {
     id: string;

@@ -21,19 +21,20 @@ export default function ActivityListItem({ activity } : Props) {
                         <Item.Content>
                             <Item.Header as={ Link } to={ `/activities/${activity.id}` }>{ activity.title }</Item.Header>
                             <Item.Description>Hosted by <Link to={ `profiles/${activity.hostUsername}` }>{ activity.host?.displayName }</Link></Item.Description>
-                            { activity.isHost ? (
-                                <Item.Description>
-                                    <Label basic color='orange'>
-                                        You are the host of this activity
-                                    </Label>
-                                </Item.Description>
-                            ) : activity.isGoing && (
-                                <Item.Description>
-                                    <Label basic color='green'>
-                                        You are going to this activity
-                                    </Label>
-                                </Item.Description>
-                            ) }
+                            {
+                                activity.isHost
+                                ? (<Item.Description>
+                                        <Label basic color='orange'>
+                                            You are the host of this activity
+                                        </Label>
+                                    </Item.Description>)
+                                : activity.isGoing && (
+                                    <Item.Description>
+                                        <Label basic color='green'>
+                                            You are going to this activity
+                                        </Label>
+                                    </Item.Description>)
+                            }
                         </Item.Content>
                     </Item>
                 </Item.Group>
@@ -49,12 +50,6 @@ export default function ActivityListItem({ activity } : Props) {
             </Segment>
             <Segment clearing>
                 <span>{ activity.description }</span>
-                {/* <Button
-                    name={ activity.id }
-                    loading={ activityStore.loading && target === activity.id }
-                    onClick={ (event) => handleActivityDelete(event, activity.id) }
-                    floated='right' content='Delete' color='red'
-                 /> */}
                 <Button
                     as={ Link } to={ `/activities/${activity.id}` }
                     floated='right' content='View' color='teal'

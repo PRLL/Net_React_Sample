@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios'
 import { toast } from 'react-toastify';
 import { history } from '../..';
 import { Activity, ActivityFormValues } from '../models/activity';
-import { Photo, Profile } from '../models/profiles';
+import { Photo, Profile } from '../models/profile';
 import { User, UserLogin } from '../models/user';
 import { store } from '../stores/store';
 
@@ -77,7 +77,9 @@ const Account = {
 }
 
 const Profiles = {
-    get: (username: string) => requests.get<Profile>(`profiles/${username}`),
+    details: (username: string) => requests.get<Profile>(`profiles/${username}`),
+    listFollowings: (username: string, predicate: string) =>
+        requests.get<Profile[]>(`follow/${username}?predicate=${predicate}`),
     uploadPhoto: (file: Blob) => {
         let formData = new FormData();
         formData.append('File', file);
@@ -88,6 +90,7 @@ const Profiles = {
     },
     setMainPhoto: (id: string) => requests.post(`photos/${id}`, {}),
     update: (profile: Partial<Profile>) => requests.put(`/profiles`, profile), // because only updating 2 properties of 'Profile' use Partial<>
+    updateFollowing: (username: string) => requests.post(`follow/${username}`, {}),
     deletePhoto: (id: string) => requests.delete(`photos/${id}`)
 }
 

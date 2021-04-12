@@ -10,10 +10,13 @@ import ProfileHeader from "./ProfileHeader";
 export default observer(function ProfilePage() {
     const { username } = useParams<{ username: string }>();
     const { profileStore } = useStore();
-    const { profile } = profileStore;
+    // const { profile } = profileStore;
 
     useEffect(() => {
         profileStore.load(username);
+        return () => {
+            profileStore.setActiveTab(0);
+        }
     }, [profileStore, username])
 
     if (profileStore.loading) return <LoadingComponent content='Loading Profile...' />
@@ -21,11 +24,12 @@ export default observer(function ProfilePage() {
     return (
         <Grid>
             <Grid.Column width='16'>
-                { profile && (
-                    <>
-                        <ProfileHeader profile={ profile } />
-                        <ProfileBody profile={ profile } />
-                    </>
+                {
+                    profileStore.profile && (
+                        <>
+                            <ProfileHeader profile={ profileStore.profile } />
+                            <ProfileBody profile={ profileStore.profile } />
+                        </>
                 )}
             </Grid.Column>
         </Grid>
