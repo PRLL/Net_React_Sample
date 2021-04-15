@@ -1,6 +1,6 @@
 import { makeAutoObservable, reaction } from "mobx";
 import agent from "../api/agent";
-import { Photo, Profile } from "../models/profile"
+import { Photo, Profile, ProfileActivity } from "../models/profile"
 import { store } from "./store";
 
 export default class ProfileStore {
@@ -10,7 +10,9 @@ export default class ProfileStore {
     followingsLoading = false;
     uploading = false;
     followings: Profile[] = [];
-    activeTab = 0;
+    activeTab = 0;;
+    profileActivities: ProfileActivity[] = [];
+    loadingActivities = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -90,6 +92,14 @@ export default class ProfileStore {
         this.activeTab = activeTab;
     }
 
+    setProfileActivities = (profileActivities: ProfileActivity[]) => {
+        this.profileActivities = profileActivities;
+    }
+
+    setLoadingActivities = (state: boolean) => {
+        this.loadingActivities = state;
+    }
+
     handleFollowingChange = (username: string) => {
         this.followings.forEach(profile => {
             if (profile.username === username) {
@@ -130,6 +140,18 @@ export default class ProfileStore {
         }
 
         this.setFollowingsLoading(false);
+    }
+    
+    loadProfileActivities = async (username: string, predicate?: string) => {
+        this.setLoadingActivities(true);
+
+        try {
+            this.setProfileActivities(await agent.Profiles.listActivities(username, predicate!));
+        } catch (error) {
+            console.log(error);
+        }
+
+        this.setLoadingActivities(false);
     }
 
     uploadPhoto = async (file: Blob) => {

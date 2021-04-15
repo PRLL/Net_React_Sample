@@ -24,3 +24,10 @@ export interface Photo {
     url: string;
     isMain: boolean;
 }
+
+export interface ProfileActivity {
+    id: string;
+    title: string;
+    category: string;
+    date: Date;
+}

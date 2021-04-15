@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Persistence;
 using Application.Activities;
-using System.Threading;
 using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
@@ -14,9 +11,9 @@ namespace API.Controllers
     public class ActivitiesController : BaseApiController
     {
         [HttpGet]
-        public async Task<ActionResult> GetActivities(CancellationToken cancellationToken)
+        public async Task<ActionResult> GetActivities([FromQuery] ActivityParams activityParams)
         {
-            return HandleResult(await Mediator.Send(new List.Query()));
+            return HandlePageResult(await Mediator.Send(new List.Query{ PagingParams = activityParams }));
         }
 
         [HttpGet("{id}")] // activities/id
