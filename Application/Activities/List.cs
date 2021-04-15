@@ -23,7 +23,6 @@ namespace Application.Activities
             private readonly DataContext _dataContext;
             private readonly IMapper _mapper;
             private readonly IUserAccessor _userAccessor;
-            private readonly ILogger<List> __logger;
             public Handler(DataContext dataContext, IMapper mapper, IUserAccessor userAccessor)
             {
                 this._dataContext = dataContext;

@@ -37,12 +37,13 @@ FluentValidation.AspNetCore [ Application ]
 Microsoft.AspNetCore.Identity.EntityFrameworkCore [ Domain ]
 Microsoft.IdentityModel.Tokens [ API ] (on lesson 135 he had it already?? didn't find the import...)
 Microsoft.AspNetCore.Authentication.JwtBearer [ API ]
+Npgsql.EntityFrameworkCore.PostgreSQL [ Persistence (but had to also install on API) ]
 
 // @ migration .net
 cd ../ [on root]
 dotnet tool list --global
 dotnet tool install --global dotnet-ef --version 5.0.3
-dotnet tool update --global dotnet-ef --version 5.0.3
+dotnet tool update --global dotnet-ef --version 5.0.3  [ can run withouth --version so it installs latest ]
 dotnet ef migrations add MigrationName -p .\Persistence\ -s .\API\
 dotnet ef migrations remove -p .\Persistence\ -s .\API\
 
@@ -89,6 +90,25 @@ npm install react-datepicker
 npm install react-dropzone
 npm install react-cropper
 npm install @microsoft/signalr
+npm install react-infinite-scroller --legacy-peer-deps
+    npm install @types/react-infinite-scroller
 
 // @run react
 npm start
+
+
+
+
+@DOCKER
+
+    @install docker
+        docker run --name dev -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=parallel001 -p 5432:5432 -d postgres:latest
+
+@HEROKU
+
+    @login
+        heroku login
+    
+    @remote heroku git
+        heroku git:remote -a net-react-sample (this is seen on the heroku website when create new app)
+        heroku buildpacks:set https://github.com/jincod/dotnetcore-buildpack
