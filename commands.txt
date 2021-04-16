@@ -38,6 +38,7 @@ Microsoft.AspNetCore.Identity.EntityFrameworkCore [ Domain ]
 Microsoft.IdentityModel.Tokens [ API ] (on lesson 135 he had it already?? didn't find the import...)
 Microsoft.AspNetCore.Authentication.JwtBearer [ API ]
 Npgsql.EntityFrameworkCore.PostgreSQL [ Persistence (but had to also install on API) ]
+NWebsec.AspNetCore.Middleware [ API ]
 
 // @ migration .net
 cd ../ [on root]
@@ -112,3 +113,4 @@ npm start
     @remote heroku git
         heroku git:remote -a net-react-sample (this is seen on the heroku website when create new app)
         heroku buildpacks:set https://github.com/jincod/dotnetcore-buildpack
+        git push heroku main

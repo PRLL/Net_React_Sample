@@ -180,11 +180,33 @@ namespace API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseXContentTypeOptions();
+            app.UseReferrerPolicy(options => options.NoReferrer());
+            app.UseXXssProtection(options => options.EnabledWithBlockMode());
+            app.UseXfo(options => options.Deny());
+            app.UseCsp(options => options
+                .BlockAllMixedContent()
+                .StyleSources(configuration => configuration.Self().CustomSources("https://fonts.googleapis.com"))
+                .FontSources(configuration => configuration.Self().CustomSources("https://fonts.gstatic.com", "data:"))
+                .FormActions(configuration => configuration.Self())
+                .FrameAncestors(configuration => configuration.Self())
+                .ImageSources(configuration => configuration.Self().CustomSources("https://res.cloudinary.com"))
+                .ScriptSources(configuration => configuration.Self().CustomSources("sha256-ma5XxS1EBgt17N22Qq31rOxxRWRfzUTQS1KOtfYwuNo="))
+            );
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(swaggerUiOptions => swaggerUiOptions.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
+            }
+            else
+            {
+                app.Use(async (httpContext, next) =>
+                {
+                    httpContext.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000");
+                    await next.Invoke();
+                });
             }
 
             // app.UseHttpsRedirection();
