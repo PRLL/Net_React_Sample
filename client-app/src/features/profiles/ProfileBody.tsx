@@ -25,6 +25,7 @@ export default observer(function ProfileBody({profile} : Props) {
     return (
         <Tab
             // menu={ {fluid: true, vertical: true} }
+            menu={ {fluid: true } }
             // menuPosition='right'
             panes={ panes }
             onTabChange={ (mouseEvent, tabProps) => profileStore.setActiveTab(tabProps.activeIndex) }

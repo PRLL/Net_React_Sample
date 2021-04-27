@@ -31,7 +31,7 @@ export default observer(function NavBar() {
                 <Menu.Item>
                     <Button
                         as={ Link } to='/createActivity'
-                        positive content={'Create' + (isMobile ? '' : ' Event')}
+                        positive content={ 'Create' + (isMobile ? '' : ' Event') }
                     />
                 </Menu.Item>
                 {/* <Menu.Item name='Error Validation Test' as={ NavLink } to='/errors' /> */}
