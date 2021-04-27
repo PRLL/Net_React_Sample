@@ -111,6 +111,6 @@ npm start
         heroku login
     
     @remote heroku git
-        heroku git:remote -a net-react-sample (this is seen on the heroku website when create new app)
+        heroku git:remote -a net-react-sample (this code is on the heroku website after creating new app)
         heroku buildpacks:set https://github.com/jincod/dotnetcore-buildpack
         git push heroku main

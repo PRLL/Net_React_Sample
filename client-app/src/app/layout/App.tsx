@@ -29,7 +29,6 @@ function App() {
     }
   }, [commonStore, userStore])
 
-
   if (!commonStore.appLoaded) return <LoadingComponent content='Loading sample app...' />
 
   return (

@@ -15,6 +15,19 @@ export default observer(function ActivityDashboard() {
 
     const [loadingNext, setLoadingNext] = useState(false);
 
+    const [width, setWidth] = useState<number>(window.innerWidth);
+    function handleWindowSizeChange() {
+        setWidth(window.innerWidth);
+    }
+    useEffect(() => {
+        window.addEventListener('resize', handleWindowSizeChange);
+        return () => {
+            window.removeEventListener('resize', handleWindowSizeChange);
+        }
+    }, []);
+    
+    let isMobile: boolean = (width <= 768);
+
     function handleGetNext() {
         setLoadingNext(true);
         activityStore.setPagingParams(new PagingParams(pagination!.currentPage + 1))
@@ -26,12 +39,9 @@ export default observer(function ActivityDashboard() {
       activityStore.list();
     }, [activityStore])
 
-    // if (activityStore.loadingInitial && !loadingNext) return <LoadingComponent content='Fetching Activities...' />
-
     return (
         <Grid>
-            {/* {console.log("total " + pagination?.totalPages + " current " + pagination?.currentPage)} */}
-            <Grid.Column width='10'>
+            <Grid.Column width={ isMobile ? '16' : '10' }>
                 {
                     activityStore.loadingInitial && !loadingNext
                         ? (
@@ -52,9 +62,14 @@ export default observer(function ActivityDashboard() {
                         )
                 }
             </Grid.Column>
-            <Grid.Column width='6'>
-                <ActivityFilters />
-            </Grid.Column>
+            {
+                !isMobile && (
+
+                    <Grid.Column width='6'>
+                        <ActivityFilters />
+                    </Grid.Column>
+                )
+            }
             <Grid.Column width='10'>
                 <Loader active={ loadingNext } />
             </Grid.Column>

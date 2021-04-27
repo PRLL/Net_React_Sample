@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
 import { Button, Card, Grid, Header, Image, Tab } from "semantic-ui-react";
 import PhotoUploadWidget from "../../app/common/image_upload/PhotoUploadWidget";
 import { Photo, Profile } from "../../app/models/profile";
@@ -28,6 +28,19 @@ export default observer(function ProfilePhotos({profile} : Props) {
         profileStore.deletePhoto(photo);
     }
 
+    const [width, setWidth] = useState<number>(window.innerWidth);
+    function handleWindowSizeChange() {
+        setWidth(window.innerWidth);
+    }
+    useEffect(() => {
+        window.addEventListener('resize', handleWindowSizeChange);
+        return () => {
+            window.removeEventListener('resize', handleWindowSizeChange);
+        }
+    }, []);
+    
+    let isMobile: boolean = (width <= 768);
+
     return (
         <Tab.Pane>
             <Grid>
@@ -46,7 +59,7 @@ export default observer(function ProfilePhotos({profile} : Props) {
                     { addPhotoMode ? (
                         <PhotoUploadWidget uploadPhoto={ handlePhotoUpload } loading={ profileStore.uploading }/>
                     ) : (
-                        <Card.Group itemsPerRow='5'>
+                        <Card.Group itemsPerRow={ isMobile ? '2' : '5' }>
                             { profile.photos?.map(photo => (
                                 <Card key={ photo.id }>
                                     <Image src={ photo.url } />

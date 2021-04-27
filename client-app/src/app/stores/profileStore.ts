@@ -132,7 +132,6 @@ export default class ProfileStore {
         this.setFollowingsLoading(true);
 
         try {
-            console.log('3');
             const followings = await agent.Profiles.listFollowings(this.profile!.username, predicate);
             this.setFollowings(followings);
         } catch (error) {

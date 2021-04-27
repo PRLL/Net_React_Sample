@@ -23,7 +23,6 @@ export default observer(function FollowButton({ profile }: Props) {
     return (
         <Reveal animated='move'>
             <Reveal.Content visible style={ {width: '100%'} }>
-                {console.log(profile)}
                 <Button
                     fluid color='teal'
                     content={ (profile.following ? '' : 'Not ') + 'Following' }

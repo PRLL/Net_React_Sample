@@ -10,7 +10,7 @@ export default function ActivityFilters() {
             <Menu vertical size='large' style={{ width: '100%', marginTop: 25 }}>
                 <Header icon='filter' attached color='teal' content='Filters' />
                 <Menu.Item 
-                    content='All Activities'
+                    content='All Events'
                     active={ predicate.has('all') }
                     onClick={ () => setPredicate('all', 'true') }
                 />

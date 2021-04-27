@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect } from 'react';
+import { SyntheticEvent, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Tab, Grid, Header, Card, Image, TabProps } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
@@ -29,11 +29,24 @@ export default observer(function ProfileActivities() {
         loadProfileActivities(profile!.username, panes[tabProps.activeIndex as number].pane.key);
     };
 
+    const [width, setWidth] = useState<number>(window.innerWidth);
+    function handleWindowSizeChange() {
+        setWidth(window.innerWidth);
+    }
+    useEffect(() => {
+        window.addEventListener('resize', handleWindowSizeChange);
+        return () => {
+            window.removeEventListener('resize', handleWindowSizeChange);
+        }
+    }, []);
+    
+    let isMobile: boolean = (width <= 768);
+
     return (
         <Tab.Pane loading={ loadingActivities }>
             <Grid>
                 <Grid.Column width='16'>
-                    <Header floated='left' icon='calendar' content={'Activities'} />
+                    <Header floated='left' icon='calendar' content={ 'Events' } />
                 </Grid.Column>
                 <Grid.Column width='16'>
                     <Tab
@@ -42,7 +55,7 @@ export default observer(function ProfileActivities() {
                         onTabChange={(e, data) => handleTabChange(e, data)}
                     />
                     <br />
-                    <Card.Group itemsPerRow='4'>
+                    <Card.Group itemsPerRow={ isMobile ? '2' : '4' }>
                     {
                         profileActivities.map((activity: ProfileActivity) => (
                             <Card
