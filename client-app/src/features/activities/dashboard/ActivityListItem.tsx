@@ -20,20 +20,23 @@ export default function ActivityListItem({ activity } : Props) {
                         <Item.Image style={ {marginBottom: 3} }size='tiny' circular src={ activity.host?.image || '/assets/user.png' } />
                         <Item.Content>
                             <Item.Header as={ Link } to={ `/activities/${activity.id}` }>{ activity.title }</Item.Header>
-                            <Item.Description>Hosted by <Link to={ `profiles/${activity.hostUsername}` }>{ activity.host?.displayName }</Link></Item.Description>
+                            <Item.Description>
+                                Hosted by <Link to={ `profiles/${activity.hostUsername}` }>{ activity.host?.displayName }</Link>
+                            </Item.Description>
                             {
                                 activity.isHost
-                                ? (<Item.Description>
-                                        <Label basic color='orange'>
-                                            You are the host of this activity
-                                        </Label>
-                                    </Item.Description>)
-                                : activity.isGoing && (
-                                    <Item.Description>
-                                        <Label basic color='green'>
-                                            You are going to this activity
-                                        </Label>
-                                    </Item.Description>)
+                                    ? (
+                                        <Item.Description>
+                                            <Label basic color='orange'>
+                                                You are the host of this activity
+                                            </Label>
+                                        </Item.Description>
+                                    ) : activity.isGoing && (
+                                        <Item.Description>
+                                            <Label basic color='green'>
+                                                You are going to this activity
+                                            </Label>
+                                        </Item.Description>)
                             }
                         </Item.Content>
                     </Item>

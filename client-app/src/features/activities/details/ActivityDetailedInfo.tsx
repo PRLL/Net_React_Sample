@@ -15,7 +15,7 @@ export default observer(function ActivityDetailedInfo({activity}: Props) {
                     <Grid.Column width='1'>
                         <Icon size='large' color='teal' name='info'/>
                     </Grid.Column>
-                    <Grid.Column width='15'>
+                    <Grid.Column width='11'>
                         <p>{ activity.description }</p>
                     </Grid.Column>
                 </Grid>
@@ -25,7 +25,7 @@ export default observer(function ActivityDetailedInfo({activity}: Props) {
                     <Grid.Column width='1'>
                         <Icon name='calendar' size='large' color='teal'/>
                     </Grid.Column>
-                    <Grid.Column width='15'>
+                    <Grid.Column width='11'>
                     { activity.date &&
                         <span>
                         { format(activity.date!, 'dd MMM yyyy h:mm aa') }

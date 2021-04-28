@@ -24,10 +24,10 @@ export default observer(function NavBar() {
         <Menu inverted fixed='top'>
             <Container>
                 <Menu.Item as={ NavLink } to='/' exact header>
-                    <img src='/assets/logo.png' alt="logo" style={{ marginRight: '10px' }} />
+                    <img src='/assets/logo.png' alt="logo" style={ {marginRight: '10px'} } />
                     { isMobile ? '' : 'HOME' }
                 </Menu.Item>
-                <Menu.Item name='Activities' as={ NavLink } to='/activities' />
+                <Menu.Item name='Events' as={ NavLink } to='/activities' />
                 <Menu.Item>
                     <Button
                         as={ Link } to='/createActivity'

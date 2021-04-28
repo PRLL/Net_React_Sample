@@ -1,5 +1,4 @@
 import { observer } from "mobx-react-lite";
-import { Link } from "react-router-dom";
 import { List, Image, Popup } from "semantic-ui-react";
 import { Profile } from "../../../app/models/profile";
 import ProfileCard from "../../profiles/ProfileCard";
@@ -18,8 +17,8 @@ export default observer(function ActivityListItemAttendee({ attendees } : Props)
         <List horizontal>
             {
                 attendees.map(attendee => (
-                    <Popup hoverable key={ attendee.username } trigger={
-                        <List.Item key={ attendee.username } as={ Link } to={ `/profiles/${attendee.username}` }>
+                    <Popup on='click' key={ attendee.username } trigger={
+                        <List.Item key={ attendee.username }>
                             <Image
                                 size='mini' circular bordered
                                 src={ attendee.image || '/assets/user.png' }

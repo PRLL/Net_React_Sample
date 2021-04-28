@@ -20,6 +20,7 @@ body {
 
 .masthead {
   display: flex;
+  justify-content: center;
   align-items: center;
   background-image: linear-gradient(
           135deg,
@@ -46,23 +47,3 @@ body {
 }
 
 /*end home page styles*/
-
-
-
-/* start of 'index.css' defaults */
-
-/* body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-} */
-
-/* end of 'index.css' defaults */
