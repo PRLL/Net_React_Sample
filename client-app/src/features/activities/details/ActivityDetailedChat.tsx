@@ -5,13 +5,15 @@ import { Link } from 'react-router-dom';
 import { Segment, Header, Comment, Loader } from 'semantic-ui-react';
 import { useStore } from '../../../app/stores/store';
 import * as Yup from 'yup';
-import { formatDistanceToNow } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     activityId: string;
 }
 
 export default observer(function ActivityDetailedChat({ activityId } : Props) {
+    const { t } = useTranslation();
+
     const { commentStore } = useStore();
 
     useEffect(() => {
@@ -31,9 +33,9 @@ export default observer(function ActivityDetailedChat({ activityId } : Props) {
                 attached='top'
                 inverted
                 color='teal'
-                style={{ border: 'none' }}
+                style={ {border: 'none'} }
             >
-            <Header>Comments</Header>
+            <Header>{ t('comments') }</Header>
             </Segment>
             <Segment attached clearing>
                 <Formik
@@ -52,7 +54,7 @@ export default observer(function ActivityDetailedChat({ activityId } : Props) {
                                     <div style={ {position: 'relative'} }>
                                         <Loader active={ isSubmitting } />
                                         <textarea 
-                                            placeholder='Type comment...'
+                                            placeholder={ t('type_comment') }
                                             rows={ 2 }
                                             { ...props.field }
                                             onKeyPress={ keyboardEvent => {
@@ -85,7 +87,7 @@ export default observer(function ActivityDetailedChat({ activityId } : Props) {
                                 <Comment.Content>
                                     <Comment.Author as={ Link } to={ `/profiles/${comment.username}` }>{ comment.displayName }</Comment.Author>
                                     <Comment.Metadata>
-                                        <div>{ formatDistanceToNow(comment.createdAt) } ago</div>
+                                        <div>{ t("date_distance", { date: comment.createdAt }) }</div>
                                     </Comment.Metadata>
                                     <Comment.Text style={ {whiteSpace: 'pre-wrap'} }>{ comment.body }</Comment.Text>
                                 </Comment.Content>

@@ -5,12 +5,15 @@ import TextInput from "../../app/common/form/TextInput";
 import TextArea from "../../app/common/form/TextArea";
 import { useStore } from "../../app/stores/store";
 import * as Yup from 'yup';
+import { useTranslation } from "react-i18next";
 
 interface Props {
     setEditMode: (editMode: boolean) => void;
 }
 
 export default observer(function ProfileEditForm({ setEditMode } : Props) {
+    const { t } = useTranslation();
+
     const { profileStore } = useStore();
     const { profile } = profileStore;
 
@@ -23,19 +26,19 @@ export default observer(function ProfileEditForm({ setEditMode } : Props) {
                 })
             } }
             validationSchema={ Yup.object({
-                displayName: Yup.string().required()
+                displayName: Yup.string().required(t('display_name_required'))
             }) }
         >
             {
                 ({ isSubmitting, isValid, dirty }) => (
                 <Form className='ui form'>
-                    <TextInput placeholder='Display Name' name='displayName' />
-                    <TextArea rows={3} placeholder='Add bio' name='bio' />
+                    <TextInput placeholder={ t('display_name') } name='displayName' />
+                    <TextArea rows={3} placeholder={ t('add_bio') } name='bio' />
                     <Button 
                         positive
                         type='submit'
                         loading={ isSubmitting }
-                        content='Update profile'
+                        content={ t('update_profile') }
                         floated='right'
                         disabled={ !isValid || !dirty }
                     />

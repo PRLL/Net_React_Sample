@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import { Grid } from "semantic-ui-react";
 import LoadingComponent from "../../app/layout/LoadingComponent";
@@ -8,9 +9,10 @@ import ProfileBody from "./ProfileBody";
 import ProfileHeader from "./ProfileHeader";
 
 export default observer(function ProfilePage() {
+    const { t } = useTranslation();
+
     const { username } = useParams<{ username: string }>();
     const { profileStore } = useStore();
-    // const { profile } = profileStore;
 
     useEffect(() => {
         profileStore.load(username);
@@ -19,7 +21,7 @@ export default observer(function ProfilePage() {
         }
     }, [profileStore, username])
 
-    if (profileStore.loading) return <LoadingComponent content='Loading Profile...' />
+    if (profileStore.loading) return <LoadingComponent content={ t('loading_profile') } />
 
     return (
         <Grid>
@@ -29,8 +31,8 @@ export default observer(function ProfilePage() {
                         <>
                             <ProfileHeader profile={ profileStore.profile } />
                             <ProfileBody profile={ profileStore.profile } />
-                        </>
-                )}
+                        </>)
+                }
             </Grid.Column>
         </Grid>
     )

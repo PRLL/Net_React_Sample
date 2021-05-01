@@ -3,16 +3,12 @@ import { observer } from 'mobx-react-lite';
 import { Tab, Grid, Header, Card, Image, TabProps } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { ProfileActivity } from '../../app/models/profile';
-import { format } from 'date-fns';
 import { useStore } from "../../app/stores/store";
-
-const panes = [
-    { menuItem: 'Future Events', pane: { key: 'future' } },
-    { menuItem: 'Hosting', pane: { key: 'hosting' } },
-    { menuItem: 'Past Events', pane: { key: 'past' } }
-];
+import { useTranslation } from 'react-i18next';
 
 export default observer(function ProfileActivities() {
+    const { t } = useTranslation();
+
     const { profileStore } = useStore();
     const {
         loadProfileActivities,
@@ -39,19 +35,24 @@ export default observer(function ProfileActivities() {
             window.removeEventListener('resize', handleWindowSizeChange);
         }
     }, []);
-    
     let isMobile: boolean = (width <= 768);
+
+    const panes = [
+        { menuItem: t('future_events'), pane: { key: 'future' } },
+        { menuItem: t('hosting'), pane: { key: 'hosting' } },
+        { menuItem: t('past_events'), pane: { key: 'past' } }
+    ];
 
     return (
         <Tab.Pane loading={ loadingActivities }>
             <Grid>
                 <Grid.Column width='16'>
-                    <Header floated='left' icon='calendar' content={ 'Events' } />
+                    <Header floated='left' icon='calendar' content={ t('events') } />
                 </Grid.Column>
                 <Grid.Column width='16'>
                     <Tab
                         panes={ panes }
-                        menu={{ secondary: true, pointing: true }}
+                        menu={ {secondary: true, pointing: true} }
                         onTabChange={(e, data) => handleTabChange(e, data)}
                     />
                     <br />
@@ -70,8 +71,8 @@ export default observer(function ProfileActivities() {
                                 <Card.Content>
                                     <Card.Header textAlign='center'>{ activity.title }</Card.Header>
                                     <Card.Meta textAlign='center'>
-                                        <div>{ format(new Date(activity.date), 'do LLL') }</div>
-                                        <div>{ format(new Date(activity.date), 'h:mm a') }</div>
+                                        <div>{ t("date_daymonth", { date: new Date(activity.date) }) }</div>
+                                        <div>{ t("date_hour", { date: new Date(activity.date) }) }</div>
                                     </Card.Meta>
                                 </Card.Content>
                             </Card>

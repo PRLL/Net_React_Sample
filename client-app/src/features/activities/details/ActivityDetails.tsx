@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import { Grid } from "semantic-ui-react";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
@@ -10,6 +11,8 @@ import ActivityDetailedInfo from "./ActivityDetailedInfo";
 import ActivityDetailedSidebar from "./ActivityDetailedSidebar";
 
 export default observer(function ActivityDetails() {
+  const { t } = useTranslation();
+
   const { activityStore } = useStore();
   const { selectedActivity: activity } = activityStore;
   const { id } = useParams<{id: string}>();
@@ -32,7 +35,7 @@ export default observer(function ActivityDetails() {
     return () => activityStore.setSelectedActivity(undefined);
   }, [id, activityStore]);
 
-  if (activityStore.loadingInitial || !activity) return <LoadingComponent content='Fetching Activity...' />;
+  if (activityStore.loadingInitial || !activity) return <LoadingComponent content={ t('fetching_activity') } />;
 
   return (
     <Grid>

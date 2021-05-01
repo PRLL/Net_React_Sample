@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { SyntheticEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { Button, Reveal } from "semantic-ui-react";
 import { Profile } from "../../app/models/profile";
 import { useStore } from "../../app/stores/store";
@@ -9,6 +10,8 @@ interface Props {
 }
 
 export default observer(function FollowButton({ profile }: Props) {
+    const { t } = useTranslation();
+
     const { profileStore, userStore } = useStore();
 
     if (userStore.user?.username === profile.username) return null;
@@ -25,14 +28,14 @@ export default observer(function FollowButton({ profile }: Props) {
             <Reveal.Content visible style={ {width: '100%'} }>
                 <Button
                     fluid color='teal'
-                    content={ (profile.following ? '' : 'Not ') + 'Following' }
+                    content={ (profile.following ? '' : t('not')) + ' ' + t('following') }
                 />
             </Reveal.Content>
             <Reveal.Content hidden style={ {width: '100%'} }>
                 <Button
                     fluid
                     color={ profile.following ? 'red' : 'green' }
-                    content={ profile.following ? 'Unfollow' : 'Follow' }
+                    content={ profile.following ? t('unfollow') : t('follow') }
                     loading={ profileStore.mainLoading }
                     onClick={ (mouseEvent) => handleFollow(mouseEvent, profile.username) }
                 />

@@ -14,8 +14,11 @@ import SelectInput from '../../../app/common/form/SelectInput';
 import { categoryOptions } from '../../../app/common/select_options/categoryOptions';
 import DateInput from '../../../app/common/form/DateInput';
 import { ActivityFormValues } from '../../../app/models/activity';
+import { useTranslation } from 'react-i18next';
   
 export default observer(function ActivityForm() {
+    const { t } = useTranslation();
+
     const history = useHistory();
     const { activityStore } = useStore();
     const { id } = useParams<{ id: string }>();
@@ -23,12 +26,12 @@ export default observer(function ActivityForm() {
     const [formActivity, setActivity] = useState<ActivityFormValues>(new ActivityFormValues());
 
     const validationSchema = Yup.object({
-        title: Yup.string().required('The activity title is required'),
-        description: Yup.string().required('The activity description is required'),
-        category: Yup.string().required('The activity category is required'),
-        date: Yup.string().required('The activity date is required'),
-        venue: Yup.string().required('The activity venue is required'),
-        city: Yup.string().required('The activity category is required')
+        title: Yup.string().required(t('activity_title_required')),
+        description: Yup.string().required(t('activity_description_required')),
+        category: Yup.string().required(t('activity_category_required')),
+        date: Yup.string().required(t('activity_date_required')),
+        venue: Yup.string().required(t('activity_venue_required')),
+        city: Yup.string().required(t('activity_city_required'))
     })
 
     useEffect(() => {
@@ -49,40 +52,36 @@ export default observer(function ActivityForm() {
         }
     }
 
-    if (activityStore.loadingInitial) return <LoadingComponent content='Loading Activity...' />
+    if (activityStore.loadingInitial) return <LoadingComponent content={ t('loading_activity') } />
 
     return (
         <Segment clearing>
-            <Header content='Activity Details' sub color='teal' />
+            <Header content={ t('activity_details') } sub color='teal' />
             <Formik enableReinitialize
                 initialValues={ formActivity }
                 validationSchema={ validationSchema }
                 onSubmit={ values => handleFormSubmit(values) }
             >
-                {({ handleSubmit, isValid, isSubmitting, dirty }) => (
-                    <Form className='ui form' onSubmit={ handleSubmit } autoComplete='off'>
-                        {/* <FormTextInput>
-                            <TextInput placeholder='Title' name='title' />
-                            <ErrorMessage name='title' render={ error => <Label basic color='red' content={ error } /> } />
-                        </FormTextInput> */}
+                {
+                    ({ handleSubmit, isValid, isSubmitting, dirty }) => (
+                        <Form className='ui form' onSubmit={ handleSubmit } autoComplete='off'>
+                            <TextInput placeholder={ t('title') } name='title' />
+                            <TextArea rows={ 3 } placeholder={ t('description') } name='description' />
+                            <SelectInput options={ categoryOptions } placeholder={ t('category') } name='category' />
+                            <DateInput placeholderText={ t('date') } name='date' showTimeSelect timeCaption='time' dateFormat='MMMM d, yyyy h:mm aa' />
 
-                        <TextInput placeholder='Title' name='title' />
-                        <TextArea rows={ 3 } placeholder='Description' name='description' />
-                        <SelectInput options={ categoryOptions } placeholder='Category' name='category' />
-                        <DateInput placeholderText='Date' name='date' showTimeSelect timeCaption='time' dateFormat='MMMM d, yyyy h:mm aa' />
+                            <Header content={ t('location_details') } sub color='teal' />
+                            <TextInput placeholder={ t('city') } name='city' />
+                            <TextInput placeholder={ t('venue') } name='venue' />
 
-                        <Header content='Location Details' sub color='teal' />
-                        <TextInput placeholder='City' name='city' />
-                        <TextInput placeholder='Venue' name='venue' />
-
-                        <Button 
-                            disabled={ isSubmitting || !dirty || !isValid }
-                            loading={ isSubmitting } 
-                            floated='right' positive type='submit' content='Submit'
-                        />
-                        <Button as={ Link } to='/activities' floated='right' type='button' content='Cancel' />
-                    </Form>
-                )}
+                            <Button 
+                                disabled={ isSubmitting || !dirty || !isValid }
+                                loading={ isSubmitting } 
+                                floated='right' positive type='submit' content={ t('submit') }
+                            />
+                            <Button as={ Link } to='/activities' floated='right' type='button' content={ t('cancel') } />
+                        </Form>)
+                }
             </Formik>
 
         </Segment>

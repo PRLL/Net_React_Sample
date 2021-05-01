@@ -1,38 +1,53 @@
 import { observer } from 'mobx-react-lite';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Container, Header, Segment, Image, Button } from 'semantic-ui-react';
+import { Container, Header, Segment, Button, Icon } from 'semantic-ui-react';
 import { useStore } from '../../app/stores/store';
 import LoginForm from '../users/LoginForm';
 import RegisterForm from '../users/RegisterForm';
 
 export default observer(function HomePage() {
+    const { t } = useTranslation();
+  
     const { userStore, modalStore } = useStore();
+
+    const [width, setWidth] = useState<number>(window.innerWidth);
+    function handleWindowSizeChange() {
+        setWidth(window.innerWidth);
+    }
+    useEffect(() => {
+        window.addEventListener('resize', handleWindowSizeChange);
+        return () => {
+            window.removeEventListener('resize', handleWindowSizeChange);
+        }
+    }, []);
+    let isMobile: boolean = (width <= 768);
 
     return (
         <Segment inverted textAlign='center' vertical className='masthead' styles={ {float: 'center'} }>
             <Container text>
                 <Header as='h1' inverted>
-                    <Image size='massive' src='/assets/logo.png' alt='logo' style={ {marginBottom: 12} } />
+                    <Icon name={ isMobile ? 'mobile alternate' : 'desktop' } size='massive' style={ {marginBottom: 12} } />
                 </Header>
                 {
                     userStore.isLoggedIn
                         ? (
                             <>
-                                <Header as='h2' inverted content='Welcome!' />
+                                <Header as='h2' inverted content={ t('welcome') } />
                                 <Button as={ Link } to='/activities' size='huge' inverted>
-                                    Go To Sample App
+                                    { t('go_to') }
                                 </Button>
-                            </>
-                        ) : (
+                            </>)
+                        : (
                             <>
                                 <Button onClick={ () => modalStore.open(<LoginForm />) } size='huge' inverted>
-                                    Login
+                                    { t('login') }
                                 </Button>
                                 <Button onClick={ () => modalStore.open(<RegisterForm />) } size='huge' inverted>
-                                    Register
+                                    { t('register') }
                                 </Button>
-                            </>
-                        )
+                            </>)
                 }
             </Container>
         </Segment>

@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite"
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Tab } from "semantic-ui-react"
 import { Profile } from "../../app/models/profile"
 import { useStore } from "../../app/stores/store"
@@ -13,14 +14,16 @@ interface Props {
 }
 
 export default observer(function ProfileBody({profile} : Props) {
+    const { t } = useTranslation();
+
     const { profileStore } = useStore();
 
     const panes = [
-        { menuItem: 'About', render: () => <ProfileAbout /> },
-        { menuItem: 'Photos', render: () => <ProfilePhotos profile={ profile } /> },
-        { menuItem: 'Events', render: () => <ProfileActivities /> },
-        { menuItem: 'Followers', render: () => <ProfileFollowings /> },
-        { menuItem: 'Following', render: () => <ProfileFollowings /> }
+        { menuItem: t('about'), render: () => <ProfileAbout /> },
+        { menuItem: t('photos'), render: () => <ProfilePhotos profile={ profile } /> },
+        { menuItem: t('events'), render: () => <ProfileActivities /> },
+        { menuItem: t('followers'), render: () => <ProfileFollowings /> },
+        { menuItem: t('following'), render: () => <ProfileFollowings /> }
     ]
 
     const [width, setWidth] = useState<number>(window.innerWidth);
@@ -40,21 +43,19 @@ export default observer(function ProfileBody({profile} : Props) {
         <>
             {
                 isMobile
-                ? (
-                    <Tab
-                        // menu={ {fluid: true, vertical: true} }
-                        menu={ {fluid: true } }
-                        // menuPosition='right'
+                    ? (
+                        <Tab
+                            menu={ {fluid: true } }
+                            panes={ panes }
+                            onTabChange={ (mouseEvent, tabProps) => profileStore.setActiveTab(tabProps.activeIndex) }
+                        />)
+                    : (
+                        <Tab
+                        menu={ {fluid: true, vertical: true} }
+                        menuPosition='right'
                         panes={ panes }
                         onTabChange={ (mouseEvent, tabProps) => profileStore.setActiveTab(tabProps.activeIndex) }
-                    />
-                ) : (
-                    <Tab
-                    menu={ {fluid: true, vertical: true} }
-                    menuPosition='right'
-                    panes={ panes }
-                    onTabChange={ (mouseEvent, tabProps) => profileStore.setActiveTab(tabProps.activeIndex) }
-                />)
+                    />)
             }
         </>
     )
