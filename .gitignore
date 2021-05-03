@@ -448,3 +448,6 @@ $RECYCLE.BIN/
 !.vscode/extensions.json
 API/appsettings.json
 API/reactivities.db
+
+## Tokens
+extra/*

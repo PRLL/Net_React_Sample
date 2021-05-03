@@ -37,9 +37,7 @@ axios.interceptors.response.use(async response => {
             else if (data.errors) {
                 const modalStateErrors = [];
                 for (const key in data.errors) {
-                    // if (data.errors[key]) {
-                        modalStateErrors.push(data.errors[key])
-                    // }
+                    modalStateErrors.push(data.errors[key])
                 }
 
                 throw modalStateErrors.flat();
@@ -81,7 +79,8 @@ const Activities = {
 const Account = {
     register: (user: UserLogin) => requests.post<User>('account/register', user),
     login: (user: UserLogin) => requests.post<User>('account/login', user),
-    current: () => requests.get<User>('account')
+    current: () => requests.get<User>('account'),
+    facebookLogin: (accessToken: string) => requests.post<User>(`/account/fbLogin?accessToken=${accessToken}`, {})
 }
 
 const Profiles = {

@@ -71,7 +71,7 @@
     "photos": "Fotos",
     "edit_profile": "Editar Perfil",
     "add_photo": "Añadir Foto",
-    "main": "Principal",
+    "main": "Usar",
     "future_events": "Eventos Futuros",
     "hosting": "Creados",
     "past_events": "Eventos Pasados",
@@ -84,5 +84,8 @@
     "date_store": "{{ date, store }}",
     "date_distance": "Hace {{ date, distance }}",
     "date_daymonth": "{{ date, daymonth }}",
-    "date_hour": "{{ date, hour }}"
+    "date_hour": "{{ date, hour }}",
+    "current_photo": "Foto Actual",
+    "facebook_login": "Acceder con Facebook",
+    "or": "O"
 }

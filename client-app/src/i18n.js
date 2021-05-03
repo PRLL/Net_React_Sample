@@ -17,8 +17,6 @@ i18next.use(I18NextHttpBackend).use(I18nextBrowserLanguageDetector).init({
         format: (value, format) => {
             if (isDate(value)) {
                 const locale = locales[i18next.language];
-                console.log("value: " + value);
-                console.log("format: " + format);
                 switch (format) {
                     case "detail":
                         return formatDate(value, "dd MMM yyyy h:mm aa", { locale });
@@ -34,7 +32,6 @@ i18next.use(I18NextHttpBackend).use(I18nextBrowserLanguageDetector).init({
                         return formatDate(value, format, { locale });
                 }
             } else {
-                console.log(isDate(value));
                 return value;
             }
         },

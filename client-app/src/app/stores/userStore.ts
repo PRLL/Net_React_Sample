@@ -6,9 +6,11 @@ import { store } from "./store";
 
 export default class UserStore {
     user: User | null = null;
+    facebookAccessToken: string | null = null;
+    facebookLoading = false;
 
     constructor() {
-        makeAutoObservable(this)
+        makeAutoObservable(this);
     }
 
     setUser = (user: User) => {
@@ -23,6 +25,10 @@ export default class UserStore {
         if (this.user) this.user.displayName = name;
     }
 
+    setFacebookLoading = (state: boolean) => {
+        this.facebookLoading = state;
+    }
+
     getUser = async () => {
         try {
             const user = await agent.Account.current();
@@ -30,6 +36,14 @@ export default class UserStore {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    getFacebookLoginStatus = async () => {
+        window.FB.getLoginStatus(response => {
+            if (response.status === 'connected') {
+                this.facebookAccessToken = response.authResponse.accessToken;
+            }
+        })
     }
 
     get isLoggedIn() {
@@ -57,6 +71,30 @@ export default class UserStore {
             store.modalStore.close();
         } catch (error) {
             throw error;
+        }
+    }
+
+    facebookLogin = () => {
+        this.setFacebookLoading(true);
+
+        const apiLogin = (accessToken: string) => {
+            agent.Account.facebookLogin(accessToken).then(user => {
+                store.commonStore.setToken(user.token);
+                this.setUser(user);
+                this.setFacebookLoading(false);
+                history.push('/activities');
+            }).catch(error => {
+                console.log(error);
+                this.setFacebookLoading(false);
+            })
+        }
+
+        if (this.facebookAccessToken) {
+            apiLogin(this.facebookAccessToken);
+        } else {
+            window.FB.login(response => {
+                apiLogin(response.authResponse.accessToken);
+            }, { scope: 'public_profile,email' })
         }
     }
 

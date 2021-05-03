@@ -93,6 +93,9 @@ npm install react-cropper
 npm install @microsoft/signalr
 npm install react-infinite-scroller --legacy-peer-deps
     npm install @types/react-infinite-scroller
+npm install i18next react-i18next i18next-http-backend i18next-browser-languagedetector
+npm install @types/facebook-js-sdk --save-dev
+npm install rimraf --save-dev
 
 // @run react
 npm start

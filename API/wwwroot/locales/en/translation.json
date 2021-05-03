@@ -64,14 +64,14 @@
     "loading_profile": "Loading Profile...",
     "followers": "Followers",
     "following_to": "Following",
-    "is_following": "is_following",
+    "is_following": "is following",
     "follower": "follower",
     "(s)": "s",
     "about": "About",
     "photos": "Photos",
     "edit_profile": "Edit Profile",
     "add_photo": "Add Photo",
-    "main": "Main",
+    "main": "Use",
     "future_events": "Future Events",
     "hosting": "Hosting",
     "past_events": "Past Events",
@@ -84,5 +84,8 @@
     "date_store": "{{ date, store }}",
     "date_distance": "{{ date, distance }} ago",
     "date_daymonth": "{{ date, daymonth }}",
-    "date_hour": "{{ date, hour }}"
+    "date_hour": "{{ date, hour }}",
+    "current_photo": "Current Photo",
+    "facebook_login": "Login with Facebook",
+    "or": "Or"
 }
