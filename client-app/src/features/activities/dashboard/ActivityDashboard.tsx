@@ -25,7 +25,6 @@ export default observer(function ActivityDashboard() {
             window.removeEventListener('resize', handleWindowSizeChange);
         }
     }, []);
-    
     let isMobile: boolean = (width <= 768);
 
     function handleGetNext() {

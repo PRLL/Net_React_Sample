@@ -8,6 +8,7 @@ export default class UserStore {
     user: User | null = null;
     facebookAccessToken: string | null = null;
     facebookLoading = false;
+    refreshTokenTimeout: any;
 
     constructor() {
         makeAutoObservable(this);
@@ -29,10 +30,16 @@ export default class UserStore {
         this.facebookLoading = state;
     }
 
+    setRefreshTokenTimeout = (refreshTokenTimeout: any) => {
+        this.refreshTokenTimeout = refreshTokenTimeout;
+    }
+
     getUser = async () => {
         try {
             const user = await agent.Account.current();
+            store.commonStore.setToken(user.token);
             this.setUser(user);
+            this.startRefreshTokenTimer(user);
         } catch (error) {
             console.log(error);
         }
@@ -50,12 +57,10 @@ export default class UserStore {
         return !!this.user;
     }
 
-    register = async (creds: UserLogin) => {
+    register = async (credentials: UserLogin) => {
         try {
-            const user = await agent.Account.register(creds);
-            store.commonStore.setToken(user.token);
-            this.setUser(user);
-            history.push('/activities');
+            await agent.Account.register(credentials);
+            history.push(`/account/registerSuccess?email=${credentials.email}`);
             store.modalStore.close();
         } catch (error) {
             throw error;
@@ -66,6 +71,7 @@ export default class UserStore {
         try {
             const user = await agent.Account.login(creds);
             store.commonStore.setToken(user.token);
+            this.startRefreshTokenTimer(user);
             this.setUser(user);
             history.push('/activities');
             store.modalStore.close();
@@ -80,6 +86,7 @@ export default class UserStore {
         const apiLogin = (accessToken: string) => {
             agent.Account.facebookLogin(accessToken).then(user => {
                 store.commonStore.setToken(user.token);
+                this.startRefreshTokenTimer(user);
                 this.setUser(user);
                 this.setFacebookLoading(false);
                 history.push('/activities');
@@ -98,10 +105,35 @@ export default class UserStore {
         }
     }
 
+    refreshToken = async () => {
+        this.stopRefreshTokenTimer();
+
+        try {
+            const user = await agent.Account.refreshToken();
+            this.setUser(user);
+            store.commonStore.setToken(user.token);
+            this.startRefreshTokenTimer(user);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     logout = () => {
         store.commonStore.setToken(null);
         window.localStorage.removeItem('jwt');
         this.user = null;
         history.push('/');
+    }
+
+    private startRefreshTokenTimer(user: User) {
+        const jwtToken = JSON.parse(atob(user.token.split('.')[1]));
+        const expires = new Date(jwtToken.exp * 1000);
+        const timeout = expires.getTime() - Date.now() - (60 * 1000);
+
+        this.setRefreshTokenTimeout(setTimeout(this.refreshToken, timeout));
+    }
+
+    private stopRefreshTokenTimer() {
+        clearTimeout(this.refreshTokenTimeout);
     }
 }

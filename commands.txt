@@ -39,6 +39,7 @@ Microsoft.IdentityModel.Tokens [ API ] (on lesson 135 he had it already?? didn't
 Microsoft.AspNetCore.Authentication.JwtBearer [ API ]
 Npgsql.EntityFrameworkCore.PostgreSQL [ Persistence (but had to also install on API) ]
 NWebsec.AspNetCore.Middleware [ API ]
+SendGrid [ Infrastructure ]
 
 // @ migration .net
 cd ../ [on root]

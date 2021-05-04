@@ -87,5 +87,16 @@
     "date_hour": "{{ date, hour }}",
     "current_photo": "Current Photo",
     "facebook_login": "Login with Facebook",
-    "or": "Or"
+    "or": "Or",
+    "verification_email_resent": "Verification email resent!",
+    "successfully_registered": "Successfully Registered",
+    "check_email": "Please, check your email for the verification link.",
+    "click_to_resend": "Didn't receive verification email? Click the button below to resend.",
+    "resend_email": "RESEND",
+    "verifying": "Verifying",
+    "failed": "Failed",
+    "success": "Success",
+    "verification_failed": "Verification failed. Please, try resending a verification link to your email",
+    "email_verified": "Email has been verified! You can now login",
+    "email_verification": "Email Verification"
 }

@@ -26,7 +26,7 @@ axios.interceptors.response.use(async response => {
         return response;
     }
 }, (error: AxiosError) => {
-    const { data, status, config } = error.response!;
+    const { data, status, config, headers } = error.response!;
     switch (status) {
         case 400:
             if (typeof data === 'string') {
@@ -45,7 +45,10 @@ axios.interceptors.response.use(async response => {
 
             break;
         case 401:
-            toast.error('Unauthorized');
+            if (headers['www-authenticate']?.startsWith('Bearer error="invalid_token"')) {
+                store.userStore.logout();
+                toast.error('Session expired...');
+            }
             break;
         case 404:
             history.push('not-found');
@@ -80,7 +83,11 @@ const Account = {
     register: (user: UserLogin) => requests.post<User>('account/register', user),
     login: (user: UserLogin) => requests.post<User>('account/login', user),
     current: () => requests.get<User>('account'),
-    facebookLogin: (accessToken: string) => requests.post<User>(`/account/fbLogin?accessToken=${accessToken}`, {})
+    facebookLogin: (accessToken: string) => requests.post<User>(`account/fbLogin?accessToken=${accessToken}`, {}),
+    refreshToken: () => requests.post<User>('account/refreshToken', {}),
+    resendVerificationEmail: (email: string) => requests.get(`account/resendEmailConfirmationLink?email=${email}`),
+    verifyEmail: (emailVerificationToken: string, email: string) => 
+        requests.post<void>(`account/verifyEmail?emailVerificationToken=${emailVerificationToken}&email=${email}`, {}),
 }
 
 const Profiles = {

@@ -6,7 +6,6 @@ import HomePage from '../../features/home/HomePage';
 import ActivityForm from '../../features/activities/form/ActivityForm';
 import ActivityDetails from '../../features/activities/details/ActivityDetails';
 import { Route, Switch, useLocation } from 'react-router-dom';
-// import TestErrors from '../../features/errors/TestError';
 import { ToastContainer } from 'react-toastify';
 import NotFound from '../../features/errors/NotFound';
 import ServerError from '../../features/errors/ServerError';
@@ -17,6 +16,8 @@ import ModalContainer from '../common/modals/ModalContainer';
 import ProfilePage from '../../features/profiles/ProfilePage';
 import PrivateRoute from './PrivateRoute';
 import { useTranslation } from 'react-i18next';
+import RegisterSuccess from '../../features/users/RegisterSuccess';
+import ConfirmEmail from '../../features/users/ConfirmEmail';
 
 function App() {
   const { t } = useTranslation();
@@ -50,11 +51,10 @@ function App() {
                 <PrivateRoute path='/activities/:id' component={ ActivityDetails } />
                 <PrivateRoute key={ location.key } path={ ['/createActivity', '/edit/:id'] } component={ ActivityForm } />
                 <PrivateRoute path='/profiles/:username' component={ ProfilePage } />
-                {/* <PrivateRoute path='/errors' component={ TestErrors } /> */}
                 <Route path='/server-error' component={ ServerError } />
-                {/* <Route path='/login' component={ LoginForm } /> */}
+                <Route path='/account/registerSuccess' component={ RegisterSuccess } />
+                <Route path='/account/verifyEmail' component={ ConfirmEmail } />
                 <Route component={ NotFound } />
-                {/* <Route component={ HomePage } /> */}
               </Switch>
             </Container>
           </>) }

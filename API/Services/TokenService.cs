@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Domain;
 using Microsoft.Extensions.Configuration;
@@ -32,12 +33,19 @@ namespace API.Services
                                     new Claim(ClaimTypes.Name, user.UserName),
                                     new Claim(ClaimTypes.Email, user.Email)
                                 }),
-                        Expires = DateTime.Now.AddDays(7),
+                        Expires = DateTime.UtcNow.AddMinutes(10),
                         SigningCredentials = new SigningCredentials(
                             new SymmetricSecurityKey(
                                 Encoding.UTF8.GetBytes(this._config["TokenKey"])),
                                 SecurityAlgorithms.HmacSha512Signature)
                     }));
+        }
+
+        public RefreshToken GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            RandomNumberGenerator.Create().GetBytes(randomNumber);
+            return new RefreshToken{ Token = Convert.ToBase64String(randomNumber) };
         }
     }
 }

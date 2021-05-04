@@ -87,5 +87,16 @@
     "date_hour": "{{ date, hour }}",
     "current_photo": "Foto Actual",
     "facebook_login": "Acceder con Facebook",
-    "or": "O"
+    "or": "O",
+    "verification_email_resent": "Correo de Verificacion re-enviado!",
+    "successfully_registered": "Exitosamente registrad@!",
+    "check_email": "Porfavor, revisa tu correo por el link de verificacion.",
+    "click_to_resend": "No has recibido el correo de verificacion? Haz click en el boton de abajo para re-enviarlo.",
+    "resend_email": "RE-ENVIAR",
+    "verifying": "Verificando",
+    "failed": "Fallido",
+    "success": "Exito",
+    "verification_failed": "Verificacion fallida. Porfavor, intente reenviar el enlace de verificaciona tu correo",
+    "email_verified": "El Correo ha sido verificado! Puede acceder a la app",
+    "email_verification": "Verificacion del Correo"
 }

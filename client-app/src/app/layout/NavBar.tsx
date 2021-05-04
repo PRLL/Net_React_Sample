@@ -16,7 +16,7 @@ export default observer(function NavBar() {
         }
     }
 
-    const { userStore: { user, logout } } = useStore();
+    const { userStore: { user, logout, isLoggedIn } } = useStore();
 
     const [width, setWidth] = useState<number>(window.innerWidth);
     function handleWindowSizeChange() {
@@ -37,27 +37,32 @@ export default observer(function NavBar() {
                     <Icon name='home' size='big' />
                     { isMobile ? '' : t('home') }
                 </Menu.Item>
-                <Menu.Item name={ t('events') } as={ NavLink } to='/activities' />
-                <Menu.Item>
-                    <Button
-                        as={ Link } to='/createActivity'
-                        positive content={ t('create') + (isMobile ? '' : ' ' + t('event')) }
-                    />
-                </Menu.Item>
-                <Menu.Item onClick={ changeLanguage }>
-                    { isMobile ? '' : t('change_language') }
-                    <img src={ '/assets/' + (i18n.language === 'en' ? 'spain_flag.png' : 'usa_flag.png') } alt='locale' style={ {marginLeft: (isMobile ? '0px' : '10px')} } />
-                </Menu.Item>
-                {/* <Menu.Item name='Error Validation Test' as={ NavLink } to='/errors' /> */}
-                <Menu.Item position='right'>
-                    <Image src={ user?.image || '/assets/user.png' } avatar spaced='right'/>
-                    <Dropdown pointing='top right' text={ user?.displayName }>
-                        <Dropdown.Menu>
-                            <Dropdown.Item as={ Link } to={ `/profiles/${user?.username}` } text={ t('my_profile') } icon='user' />
-                            <Dropdown.Item onClick={ logout } text={ t('logout') } icon='power' />
-                        </Dropdown.Menu>
-                    </Dropdown>
-                </Menu.Item>
+                {
+                    isLoggedIn && (
+                        <>
+                            <Menu.Item name={ t('events') } as={ NavLink } to='/activities' />
+                            <Menu.Item>
+                                <Button
+                                    as={ Link } to='/createActivity'
+                                    positive content={ t('create') + (isMobile ? '' : ' ' + t('event')) }
+                                />
+                            </Menu.Item>
+                            <Menu.Item onClick={ changeLanguage }>
+                                { isMobile ? '' : t('change_language') }
+                                <img src={ '/assets/' + (i18n.language === 'en' ? 'spain_flag.png' : 'usa_flag.png') } alt='locale' style={ {marginLeft: (isMobile ? '0px' : '10px')} } />
+                            </Menu.Item>
+                            <Menu.Item position='right'>
+                                <Image src={ user?.image || '/assets/user.png' } avatar spaced='right'/>
+                                <Dropdown pointing='top right' text={ user?.displayName }>
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item as={ Link } to={ `/profiles/${user?.username}` } text={ t('my_profile') } icon='user' />
+                                        <Dropdown.Item onClick={ logout } text={ t('logout') } icon='power' />
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </Menu.Item>
+                        </>
+                    )
+                }
             </Container>
         </Menu>
     )
