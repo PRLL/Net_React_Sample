@@ -8,7 +8,7 @@ import { useStore } from '../stores/store';
 export default observer(function NavBar() {
     const { t, i18n } = useTranslation();
 
-    const changeLanguage = () => {
+    const handleChangeLanguage = () => {
         if (i18n.language === 'en') {
             i18n.changeLanguage('es');
         } else {
@@ -47,7 +47,7 @@ export default observer(function NavBar() {
                                     positive content={ t('create') + (isMobile ? '' : ' ' + t('event')) }
                                 />
                             </Menu.Item>
-                            <Menu.Item onClick={ changeLanguage }>
+                            <Menu.Item onClick={ handleChangeLanguage }>
                                 { isMobile ? '' : t('change_language') }
                                 <img src={ '/assets/' + (i18n.language === 'en' ? 'spain_flag.png' : 'usa_flag.png') } alt='locale' style={ {marginLeft: (isMobile ? '0px' : '10px')} } />
                             </Menu.Item>
