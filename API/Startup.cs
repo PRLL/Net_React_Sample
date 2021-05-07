@@ -196,7 +196,8 @@ namespace API
                     "data:",
                     "https://res.cloudinary.com",
                     "https://www.facebook.com",
-                    "https://platform-lookaside.fbsbx.com"
+                    "https://platform-lookaside.fbsbx.com",
+                    "https://scontent-iad3-2.xx.fbcdn.net"
                 ))
                 .ScriptSources(configuration => configuration.Self().CustomSources(
                     "sha256-ma5XxS1EBgt17N22Qq31rOxxRWRfzUTQS1KOtfYwuNo=",
