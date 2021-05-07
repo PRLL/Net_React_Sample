@@ -31,8 +31,7 @@ export default observer(function HomePage() {
 
     function handleDocumentationRedirect() {
         if (i18n.language === 'en') {
-            window.open('https://github.com/PRLL/Net_React_Sample', '_blank');
-            // window.open('https://drive.google.com/file/d/1h0w8lhFLoGINizT_aFg1W5BFGrH-Xr3x/view?usp=sharing', '_blank');
+            window.open('https://drive.google.com/file/d/1h0w8lhFLoGINizT_aFg1W5BFGrH-Xr3x/view?usp=sharing', '_blank');
         } else {
             window.open('https://drive.google.com/file/d/1h0w8lhFLoGINizT_aFg1W5BFGrH-Xr3x/view?usp=sharing', '_blank');
         }
@@ -83,7 +82,7 @@ export default observer(function HomePage() {
                             <Divider horizontal inverted />
                             <Icon onClick={ handleGithubRedirect } link name='github' size='huge' style={ {marginBottom: '60px'} } />
                             <img onClick={ handleChangeLanguage } width='62' height='66' src={ '/assets/' + (i18n.language === 'en' ? 'spain_flag.png' : 'usa_flag.png') } alt='locale' />
-                            <Icon onClick={ handleDocumentationRedirect } link name='file pdf' size='huge' style={ {marginBottom: '60px'} } />
+                            <Icon onClick={ handleDocumentationRedirect } link name='help circle' size='huge' style={ {marginBottom: '60px'} } />
                         </Container>
                     </Grid.Row>
                 </Grid>
