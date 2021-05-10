@@ -198,7 +198,8 @@ namespace API
                     "https://www.facebook.com",
                     "https://platform-lookaside.fbsbx.com",
                     "https://scontent-iad3-2.xx.fbcdn.net",
-                    "https://scontent-iad3-1.xx.fbcdn.net"
+                    "https://scontent-iad3-1.xx.fbcdn.net",
+                    "https://net-react-sample.herokuapp.com"
                 ))
                 .ScriptSources(configuration => configuration.Self().CustomSources(
                     "sha256-ma5XxS1EBgt17N22Qq31rOxxRWRfzUTQS1KOtfYwuNo=",
