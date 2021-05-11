@@ -98,5 +98,8 @@
     "success": "Success",
     "verification_failed": "Verification failed. Please, try resending a verification link to your email",
     "email_verified": "Email has been verified! You can now login",
-    "email_verification": "Email Verification"
+    "email_verification": "Email Verification",
+    "step_1": "Step 1 - Add Photo",
+    "step_2": "Step 2 - Resize",
+    "step_3": "Step 3 - Preview & Upload"
 }
