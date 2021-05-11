@@ -31,18 +31,19 @@ export default observer(function ProfileEditForm({ setEditMode } : Props) {
         >
             {
                 ({ isSubmitting, isValid, dirty }) => (
-                <Form className='ui form'>
-                    <TextInput placeholder={ t('display_name') } name='displayName' />
-                    <TextArea rows={3} placeholder={ t('add_bio') } name='bio' />
-                    <Button 
-                        positive
-                        type='submit'
-                        loading={ isSubmitting }
-                        content={ t('update_profile') }
-                        floated='right'
-                        disabled={ !isValid || !dirty }
-                    />
-                </Form>)
+                    <Form className='ui form'>
+                        <TextInput placeholder={ t('display_name') } name='displayName' />
+                        <TextArea rows={3} placeholder={ t('add_bio') } name='bio' />
+                        <Button
+                            positive
+                            type='submit'
+                            loading={ isSubmitting }
+                            content={ t('update_profile') }
+                            floated='right'
+                            disabled={ !isValid || !dirty }
+                        />
+                    </Form>
+                )
             }
         </Formik>
     )

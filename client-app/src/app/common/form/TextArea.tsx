@@ -6,6 +6,7 @@ interface Props {
     name: string;
     rows: number;
     label?: string;
+    value?: string | undefined;
 }
 
 export default function TextArea(props: Props) {
@@ -17,8 +18,8 @@ export default function TextArea(props: Props) {
             <textarea { ...field} { ...props } />
             {
                 meta.touched && meta.error
-                ? (<Label basic color='red'>{ meta.error }</Label>)
-                : null
+                    ? <Label basic color='red'>{ meta.error }</Label>
+                    : null
             }
         </Form.Field>
     )

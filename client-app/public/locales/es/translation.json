@@ -98,5 +98,8 @@
     "success": "Exito",
     "verification_failed": "Verificacion fallida. Porfavor, intente reenviar el enlace de verificaciona tu correo",
     "email_verified": "El Correo ha sido verificado! Puede acceder a la app",
-    "email_verification": "Verificacion del Correo"
+    "email_verification": "Verificacion del Correo",
+    "step_1": "Paso 1 - Añadir Foto",
+    "step_2": "Paso 2 - Recortar",
+    "step_3": "Paso 3 - Previsualizar & Subir"
 }
