@@ -16,7 +16,7 @@ export default observer(function ProfileAbout() {
         <Tab.Pane>
             <Grid>
                 <Grid.Column width='16'>
-                    <Header floated='left' icon='user' content={ t('about') + ` ${profile?.displayName}` } />
+                    <Header floated='left' content={ t('about') + ` ${profile?.displayName}` } />
                     {
                         isProfileFromCurrentUser && (
                             <Button

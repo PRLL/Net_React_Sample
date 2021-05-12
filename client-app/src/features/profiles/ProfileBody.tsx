@@ -16,16 +16,6 @@ interface Props {
 export default observer(function ProfileBody({profile} : Props) {
     const { t } = useTranslation();
 
-    const { profileStore } = useStore();
-
-    const panes = [
-        { menuItem: t('about'), render: () => <ProfileAbout /> },
-        { menuItem: t('photos'), render: () => <ProfilePhotos profile={ profile } /> },
-        { menuItem: t('events'), render: () => <ProfileActivities /> },
-        { menuItem: t('followers'), render: () => <ProfileFollowings /> },
-        { menuItem: t('following'), render: () => <ProfileFollowings /> }
-    ]
-
     const [width, setWidth] = useState<number>(window.innerWidth);
     function handleWindowSizeChange() {
         setWidth(window.innerWidth);
@@ -36,8 +26,17 @@ export default observer(function ProfileBody({profile} : Props) {
             window.removeEventListener('resize', handleWindowSizeChange);
         }
     }, []);
-    
     let isMobile: boolean = (width <= 768);
+
+    const { profileStore } = useStore();
+
+    const panes = [
+        { menuItem: { content: (isMobile ? '' :  t('about')), icon: 'user' }, render: () => <ProfileAbout /> },
+        { menuItem: { content: (isMobile ? '' :  t('photos')), icon: 'photo' }, render: () => <ProfilePhotos profile={ profile } /> },
+        { menuItem: { content: (isMobile ? '' :  t('events')), icon: 'calendar alternate outline' }, render: () => <ProfileActivities /> },
+        { menuItem: { content: (isMobile ? '' :  t('followers')), icon: 'share square outline' }, render: () => <ProfileFollowings /> },
+        { menuItem: { content: (isMobile ? '' :  t('following')), icon: 'sign-in' }, render: () => <ProfileFollowings /> }
+    ]
 
     return (
         <>
@@ -45,17 +44,18 @@ export default observer(function ProfileBody({profile} : Props) {
                 isMobile
                     ? (
                         <Tab
-                            menu={ {fluid: true } }
                             panes={ panes }
                             onTabChange={ (mouseEvent, tabProps) => profileStore.setActiveTab(tabProps.activeIndex) }
-                        />)
+                        />
+                    )
                     : (
                         <Tab
-                        menu={ {fluid: true, vertical: true} }
-                        menuPosition='right'
-                        panes={ panes }
-                        onTabChange={ (mouseEvent, tabProps) => profileStore.setActiveTab(tabProps.activeIndex) }
-                    />)
+                            menu={ {fluid: true, vertical: true} }
+                            menuPosition='right'
+                            panes={ panes }
+                            onTabChange={ (mouseEvent, tabProps) => profileStore.setActiveTab(tabProps.activeIndex) }
+                        />
+                    )
             }
         </>
     )
