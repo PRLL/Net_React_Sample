@@ -1,15 +1,19 @@
 
 import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Grid, Loader } from 'semantic-ui-react';
+import { Button, Divider, Grid, Loader } from 'semantic-ui-react';
 import { useStore } from '../../../app/stores/store';
 import ActivityList from './ActivityList';
 import ActivityFilters from './ActivityFilters';
 import { PagingParams } from '../../../app/models/pagination';
 import InfiniteScroll from 'react-infinite-scroller';
 import ActivityListItemPlaceholder from './ActivityListItemPlaceholder';
+import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default observer(function ActivityDashboard() {
+    const { t } = useTranslation();
+
     const { activityStore } = useStore();
     const { pagination } = activityStore;
 
@@ -39,8 +43,21 @@ export default observer(function ActivityDashboard() {
     }, [activityStore])
 
     return (
-        <Grid>
-            <Grid.Column width={ isMobile ? '16' : '10' }>
+        <>
+            {
+                isMobile && (
+                    <>
+                        <Button
+                            fluid
+                            as={ Link } to='/createActivity'
+                            positive content={ t('create') + t('event') }
+                        />
+                        <Divider />
+                    </>
+                )
+            }
+            <Grid>
+                <Grid.Column width={ isMobile ? '16' : '10' }>
                 {
                     activityStore.loadingInitial && !loadingNext
                         ? (
@@ -60,18 +77,18 @@ export default observer(function ActivityDashboard() {
                             </InfiniteScroll>
                         )
                 }
-            </Grid.Column>
-            {
-                !isMobile && (
-
-                    <Grid.Column width='6'>
-                        <ActivityFilters />
-                    </Grid.Column>
-                )
-            }
-            <Grid.Column width='10'>
-                <Loader active={ loadingNext } />
-            </Grid.Column>
-        </Grid>
+                </Grid.Column>
+                {
+                    !isMobile && (
+                        <Grid.Column width='6'>
+                            <ActivityFilters />
+                        </Grid.Column>
+                    )
+                }
+                <Grid.Column width='10'>
+                    <Loader active={ loadingNext } />
+                </Grid.Column>
+            </Grid>
+        </>
     )
 })

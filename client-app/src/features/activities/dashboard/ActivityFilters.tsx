@@ -1,6 +1,7 @@
 import Calendar from "react-calendar";
 import { useTranslation } from "react-i18next";
-import { Header, Menu } from "semantic-ui-react";
+import { Link } from "react-router-dom";
+import { Button, Header, Menu } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 
 export default function ActivityFilters() {
@@ -10,7 +11,13 @@ export default function ActivityFilters() {
 
     return (
         <>
-            <Menu vertical size='large' style={{ width: '100%', marginTop: 25 }}>
+            <Button
+                fluid
+                style={{ marginTop: 25 }}
+                as={ Link } to='/createActivity'
+                positive content={ t('create') + t('event') }
+            />
+            <Menu vertical size='large' style={{ width: '100%' }}>
                 <Header icon='filter' attached color='teal' content='Filters' />
                 <Menu.Item 
                     content={ t('all_events') }

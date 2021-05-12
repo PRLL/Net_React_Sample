@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink } from 'react-router-dom';
-import { Button, Container, Dropdown, Icon, Image, Menu } from 'semantic-ui-react';
+import { Container, Dropdown, Icon, Image, Menu } from 'semantic-ui-react';
 import { useStore } from '../stores/store';
 
 export default observer(function NavBar() {
@@ -41,12 +41,6 @@ export default observer(function NavBar() {
                     isLoggedIn && (
                         <>
                             <Menu.Item name={ t('events') } as={ NavLink } to='/activities' />
-                            <Menu.Item>
-                                <Button
-                                    as={ Link } to='/createActivity'
-                                    positive content={ t('create') + (isMobile ? '' : ' ' + t('event')) }
-                                />
-                            </Menu.Item>
                             <Menu.Item onClick={ handleChangeLanguage }>
                                 { isMobile ? '' : t('change_language') }
                                 <img src={ '/assets/' + (i18n.language === 'en' ? 'spain_flag.png' : 'usa_flag.png') } alt='locale' style={ {marginLeft: (isMobile ? '0px' : '10px')} } />
